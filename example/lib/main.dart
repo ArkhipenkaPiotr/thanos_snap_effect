@@ -33,11 +33,13 @@ class SnappableExamplePage extends StatefulWidget {
 
 class _SnappableExamplePageState extends State<SnappableExamplePage> {
   var _visible = true;
+  final _snappableController = SnappableController(snapDuration: const Duration(seconds: 1));
 
   void _toggleVisibility() {
     setState(() {
       _visible = !_visible;
     });
+    _snappableController.snap();
   }
 
   @override
@@ -48,8 +50,8 @@ class _SnappableExamplePageState extends State<SnappableExamplePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: SnappableVisibility(
-          visible: _visible,
+        child: Snappable(
+          controller: _snappableController,
           child: const FlutterLogo(
             size: 300,
             style: FlutterLogoStyle.stacked,

@@ -46,8 +46,12 @@ class _SnappableState extends State<Snappable> with SingleTickerProviderStateMix
 
           return !_controller._animationIsRunning
               ? child
-              : ShaderPainter(
-                  shader: _controller._shader!,
+              : SizedBox(
+                  width: _controller._currentSnapshotInfo!.width,
+                  height: _controller._currentSnapshotInfo!.height,
+                  child: ShaderPainter(
+                    shader: _controller._shader!,
+                  ),
                 );
         },
         child: widget.child,
@@ -57,9 +61,9 @@ class _SnappableState extends State<Snappable> with SingleTickerProviderStateMix
 }
 
 class SnappableController {
-  final Duration snapDuration;
-
   final _containerKey = GlobalKey();
+
+  final Duration snapDuration;
 
   late final AnimationController _animationController;
 
@@ -67,7 +71,9 @@ class SnappableController {
 
   bool get _animationIsRunning => _animationController.isAnimating;
 
-  SnappableController(this.snapDuration);
+  _SnapshotInfo? _currentSnapshotInfo;
+
+  SnappableController({required this.snapDuration});
 
   void _init(TickerProvider vsync) {
     _animationController = AnimationController(
@@ -81,23 +87,42 @@ class SnappableController {
       return;
     }
 
-    final program = await ui.FragmentProgram.fromAsset(
-        'packages/thanos_snap_effect/shader/thanos_snap_effect.glsl');
-    _shader = program.fragmentShader();
+    if (_shader == null) {
+      final program = await ui.FragmentProgram.fromAsset(
+          'packages/thanos_snap_effect/shader/thanos_snap_effect.glsl');
+      _shader = program.fragmentShader();
+    }
 
-    final image = await _capture();
-    _shader?.setImageSampler(0, image);
-    _shader?.setFloat(0, image.width.toDouble());
-    _shader?.setFloat(1, image.height.toDouble());
+    final snapshotInfo = await _capture();
+    _currentSnapshotInfo = snapshotInfo;
+
+    _shader?.setFloat(0, snapshotInfo.width);
+    _shader?.setFloat(1, snapshotInfo.height);
+    _shader?.setImageSampler(0, snapshotInfo.image);
+    _animationController.addListener(() {
+      _shader?.setFloat(2, _animationController.value);
+    });
 
     _animationController.reset();
     _animationController.forward();
   }
 
-  Future<ui.Image> _capture() {
+  Future<_SnapshotInfo> _capture() async {
     RenderRepaintBoundary? boundary =
         _containerKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
 
-    return boundary!.toImage(pixelRatio: 6);
+    final width = boundary!.size.width;
+    final height = boundary.size.height;
+    final image = await boundary.toImage();
+
+    return _SnapshotInfo(image, width, height);
   }
+}
+
+class _SnapshotInfo {
+  final ui.Image image;
+  final double width;
+  final double height;
+
+  _SnapshotInfo(this.image, this.width, this.height);
 }
