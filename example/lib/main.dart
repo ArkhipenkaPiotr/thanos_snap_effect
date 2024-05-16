@@ -31,16 +31,12 @@ class SnappableExamplePage extends StatefulWidget {
   State<SnappableExamplePage> createState() => _SnappableExamplePageState();
 }
 
-class _SnappableExamplePageState extends State<SnappableExamplePage> {
-  var _visible = true;
-  final _snappableController = SnappableController(snapDuration: const Duration(seconds: 1));
-
-  void _toggleVisibility() {
-    setState(() {
-      _visible = !_visible;
-    });
-    _snappableController.snap();
-  }
+class _SnappableExamplePageState extends State<SnappableExamplePage>
+    with SingleTickerProviderStateMixin {
+  late final _animationController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 500),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -49,21 +45,38 @@ class _SnappableExamplePageState extends State<SnappableExamplePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Snappable(
-          controller: _snappableController,
-          child: const FlutterLogo(
-            size: 300,
-            style: FlutterLogoStyle.stacked,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Spacer(
+            flex: 2,
           ),
-        ),
+          Snappable(
+            animation: _animationController,
+            child: const FlutterLogo(
+              size: 300,
+              style: FlutterLogoStyle.stacked,
+            ),
+          ),
+          const Spacer(),
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (BuildContext context, Widget? child) {
+              return Slider(
+                value: _animationController.value,
+                onChanged: (value) => _animationController.value = value,
+              );
+            },
+          ),
+          const Spacer(),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _toggleVisibility,
-        tooltip: 'Dismiss',
-        child: _visible
-            ? const Icon(Icons.visibility_off_rounded)
-            : const Icon(Icons.visibility_rounded),
+        onPressed: () {
+          _animationController.forward(from: 0);
+        },
+        tooltip: 'Start',
+        child: const Icon(Icons.play_arrow),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
