@@ -35,7 +35,7 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
     with SingleTickerProviderStateMixin {
   late final _animationController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 500),
+    duration: const Duration(milliseconds: 1500),
   );
 
   @override
