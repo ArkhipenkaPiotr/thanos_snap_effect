@@ -13,7 +13,7 @@ out vec4 fragColor;
 
 float randomMovementAngle(vec2 uv, float time)
 {
-    return -fract(sin(15.234756823656528 * uv.x * time / uv.y) * 1360.234) * 4.14;
+    return -fract(sin(15.234756823656528 * uv.x / uv.y) * 1360.234) * 4.14;
 }
 
 vec2 calculateZeroPointPixelPos(vec2 uv, float time)
