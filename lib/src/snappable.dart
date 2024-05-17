@@ -108,7 +108,7 @@ class _SnappableController {
   }
 
   void _onControllerChange() {
-    if (animation.value == 0) {
+    if (animation.value == 0 || !_snapshotReady) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         _currentSnapshotInfo = null;
         _snap();
