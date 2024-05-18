@@ -49,14 +49,11 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Spacer(
-            flex: 2,
+            flex: 1,
           ),
           Snappable(
             animation: _animationController,
-            child: const FlutterLogo(
-              size: 300,
-              style: FlutterLogoStyle.stacked,
-            ),
+            child: Image.network('https://picsum.photos/300/200'),
           ),
           const Spacer(),
           AnimatedBuilder(
