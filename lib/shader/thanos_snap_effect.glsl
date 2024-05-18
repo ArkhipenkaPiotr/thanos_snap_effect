@@ -2,7 +2,7 @@
 
 #include<flutter/runtime_effect.glsl>
 
-#define particle_lifetime .8
+#define particle_lifetime 1.0
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
@@ -19,7 +19,10 @@ float randomMovementAngle(vec2 uv, float time)
 vec2 calculateZeroPointPixelPos(vec2 uv, float time)
 {
     float angle = randomMovementAngle(uv, time);
-    return vec2(uv.x - time * cos(angle), uv.y - time * sin(angle));
+    float accelerationFactor = pow(mix(1.0, 0.0, uv.x), 1.0);
+//    float accelerationFactor = 1.0;
+
+    return vec2(uv.x - time * cos(angle) * accelerationFactor, uv.y - time * sin(angle) * accelerationFactor);
 }
 
 void main()
@@ -28,13 +31,13 @@ void main()
     vec4 texColor=texture(uImageTexture, uv);
 
     vec2 zeroPointPixelPos = calculateZeroPointPixelPos(uv, animationValue);
-    float alpha = (1 - animationValue / particle_lifetime);
-
     if (zeroPointPixelPos.x < 0.0 || zeroPointPixelPos.x > 1.0 || zeroPointPixelPos.y < 0.0 || zeroPointPixelPos.y > 1.0)
     {
         fragColor = vec4(0.0, 0.0, 0.0, 0.0);
     } else {
         vec4 zeroPointPixelColor = texture(uImageTexture, zeroPointPixelPos);
-        fragColor = vec4(zeroPointPixelColor.rgb, alpha * zeroPointPixelColor.a);
+//        float alpha = mix(zeroPointPixelColor.a, 0.0, animationValue);
+        float alpha = zeroPointPixelColor.a;
+        fragColor = vec4(zeroPointPixelColor.rgb, alpha);
     }
 }
