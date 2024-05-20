@@ -35,7 +35,7 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
     with SingleTickerProviderStateMixin {
   late final _animationController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 3500),
+    duration: const Duration(milliseconds: 2000),
   );
 
   @override
@@ -56,14 +56,25 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
             child: Image.network('https://picsum.photos/300/200'),
           ),
           const Spacer(),
-          AnimatedBuilder(
+          Snappable(
             animation: _animationController,
-            builder: (BuildContext context, Widget? child) {
-              return Slider(
-                value: _animationController.value,
-                onChanged: (value) => _animationController.value = value,
-              );
-            },
+            child: const FlutterLogo(
+              size: 200,
+              style: FlutterLogoStyle.stacked,
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: AnimatedBuilder(
+              animation: _animationController,
+              builder: (BuildContext context, Widget? child) {
+                return Slider(
+                  value: _animationController.value,
+                  onChanged: (value) => _animationController.value = value,
+                );
+              },
+            ),
           ),
           const Spacer(),
         ],
