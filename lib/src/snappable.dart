@@ -8,11 +8,13 @@ import 'package:thanos_snap_effect/src/shader_painter.dart';
 class Snappable extends StatefulWidget {
   final Widget child;
   final Animation animation;
+  final EdgeInsets outerPadding;
 
   const Snappable({
     super.key,
     required this.child,
     required this.animation,
+    this.outerPadding = const EdgeInsets.all(40),
   });
 
   @override
@@ -25,7 +27,9 @@ class _SnappableState extends State<Snappable> {
   @override
   void initState() {
     super.initState();
-    _controller = _SnappableController(animation: widget.animation).._init();
+    _controller = _SnappableController(
+      animation: widget.animation,
+    ).._init();
   }
 
   @override

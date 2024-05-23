@@ -40,7 +40,6 @@ vec2 calculateZeroPointPixelPos(vec2 uv, float time)
 void main()
 {
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
-    vec4 texColor=texture(uImageTexture, uv);
 
     vec2 zeroPointPixelPos = calculateZeroPointPixelPos(uv, animationValue);
     if (zeroPointPixelPos.x < 0.0 || zeroPointPixelPos.x > 1.0 || zeroPointPixelPos.y < 0.0 || zeroPointPixelPos.y > 1.0)
