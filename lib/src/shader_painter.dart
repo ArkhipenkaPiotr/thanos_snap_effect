@@ -9,7 +9,7 @@ class ShaderPainter extends StatelessWidget {
   const ShaderPainter({
     super.key,
     required this.shader,
-    this.outerPadding = EdgeInsets.zero,
+    required this.outerPadding,
   });
 
   @override

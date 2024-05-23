@@ -58,6 +58,7 @@ class _SnappableState extends State<Snappable> {
                   height: _controller._currentSnapshotInfo!.height,
                   child: ShaderPainter(
                     shader: _controller._shader!,
+                    outerPadding: widget.outerPadding,
                   ),
                 );
         },
