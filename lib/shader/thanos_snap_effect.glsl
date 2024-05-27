@@ -3,6 +3,7 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
+#define particle_size 0.005
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
@@ -41,7 +42,10 @@ void main()
 {
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
-    vec2 zeroPointPixelPos = calculateZeroPointPixelPos(uv, animationValue);
+    // Calculate the position of the particle that this pixel belongs to
+    vec2 particlePos = floor(uv / particle_size) * particle_size + particle_size / 2.0;
+
+    vec2 zeroPointPixelPos = calculateZeroPointPixelPos(particlePos, animationValue);
     if (zeroPointPixelPos.x < 0.0 || zeroPointPixelPos.x > 1.0 || zeroPointPixelPos.y < 0.0 || zeroPointPixelPos.y > 1.0)
     {
         fragColor = vec4(0.0, 0.0, 0.0, 0.0);
