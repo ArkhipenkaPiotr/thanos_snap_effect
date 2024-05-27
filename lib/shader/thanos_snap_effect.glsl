@@ -21,7 +21,7 @@ float randomMovementAngle(vec2 uv, float time)
 
 float calculateDelay(vec2 uv)
 {
-    return (1. - particle_lifetime)*(1 + uv.x - uv.y);
+    return (1. - particle_lifetime)*(1 + uv.x - uv.y) / 2;
 }
 
 vec2 calculateZeroPointPixelPos(vec2 uv, float time)
