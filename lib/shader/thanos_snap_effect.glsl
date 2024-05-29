@@ -33,8 +33,6 @@ vec2 calculateZeroPointPixelPos(vec2 uv, float time)
     float x1 = uv.x;
     float y1 = uv.y;
 
-    float x = (2*x1 - 1.25*pow(adjustedTime, 2) * cos(angle)) / (2 - 1.25*pow(adjustedTime, 2)*cos(angle)*(1 - tan(angle)));
-    float y = (2*y1 - 1.25*pow(adjustedTime, 2) * sin(angle)) / (2 - 1.25*pow(adjustedTime, 2)*sin(angle)*(1/tan(angle) - 1));
     return vec2(uv.x - adjustedTime /2 * cos(angle), uv.y - adjustedTime /2 * sin(angle));
 }
 
@@ -55,7 +53,6 @@ void main()
         fragColor = vec4(0.0, 0.0, 0.0, 0.0);
     } else {
         vec4 zeroPointPixelColor = texture(uImageTexture, zeroPointPixelPos);
-        ////                float alpha = mix(zeroPointPixelColor.a, 0.0, animationValue);
         float particleDelay = calculateDelay(zeroPointPixelPos);
         if (animationValue - particleDelay < 0.0)
         {
@@ -64,6 +61,5 @@ void main()
             float alpha = powerInterpolation(zeroPointPixelColor.a, 0.0, (animationValue - particleDelay) / particle_lifetime, 2);
             fragColor = vec4(zeroPointPixelColor.rgb, alpha);
         }
-//                fragColor = zeroPointPixelColor;
     }
 }
