@@ -14,7 +14,8 @@ out vec4 fragColor;
 
 float randomMovementAngle(vec2 uv, float time)
 {
-    float randomValue = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453);
+    vec2 normalizedPosition = floor(uv / particle_size) * particle_size;
+    float randomValue = fract(sin(dot(normalizedPosition, vec2(12.9898, 78.233))) * 43758.5453);
     float angle = mix(0, -3.14, randomValue);
     return angle;
 }
@@ -44,10 +45,7 @@ void main()
 {
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
-    // Calculate the position of the particle that this pixel belongs to
-    vec2 particlePos = floor(uv / particle_size) * particle_size + particle_size / 2.0;
-
-    vec2 zeroPointPixelPos = calculateZeroPointPixelPos(particlePos, animationValue);
+    vec2 zeroPointPixelPos = calculateZeroPointPixelPos(uv, animationValue);
     if (zeroPointPixelPos.x < 0.0 || zeroPointPixelPos.x > 1.0 || zeroPointPixelPos.y < 0.0 || zeroPointPixelPos.y > 1.0)
     {
         fragColor = vec4(0.0, 0.0, 0.0, 0.0);
