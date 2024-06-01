@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -96,8 +97,13 @@ class _SnappableController {
     final snapshotInfo = await _capture();
     _currentSnapshotInfo = snapshotInfo;
 
+    final random = Random();
+    final angles = List.generate(625, (index) => random.nextDouble() * pi - pi);
     _shader?.setFloat(0, snapshotInfo.width);
     _shader?.setFloat(1, snapshotInfo.height);
+    for (var i = 0; i < 625; i++) {
+      _shader?.setFloat(3 + i, angles[i]);
+    }
     _shader?.setImageSampler(0, snapshotInfo.image);
   }
 
