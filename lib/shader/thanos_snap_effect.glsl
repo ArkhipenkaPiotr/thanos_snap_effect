@@ -3,13 +3,12 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
-#define particle_size 0.04
+#define particle_size 0.026
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
 // Current animation value, from 0.0 to 1.0.
 uniform float animationValue;
-uniform float uParticleAngles[625];
 
 out vec4 fragColor;
 float randomMovementAngle(vec2 uv, float time)
@@ -41,13 +40,20 @@ float powerInterpolation(float v0, float v1, float t, float p) {
     return (1 - pow(t, p)) * v0 + pow(t, p) * v1;
 }
 
+float randomAngle(int i)
+{
+    float randomValue = fract(sin(float(i) * 12.9898 + 78.233) * 43758.5453);
+    return mix(0, -3.14, randomValue);
+}
+
+
 void main()
 {
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
     for (int i = 0; i < int(pow(1 / particle_size, 2)); i++)
     {
-        float angle = uParticleAngles[i];
+        float angle = randomAngle(i);
         vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), float(i) / (1 / particle_size)) * particle_size;
         vec2 zeroPointPixelPos = vec2(uv.x - animationValue * cos(angle), uv.y - animationValue * sin(angle));
         if (distance(particleCenterPos, zeroPointPixelPos) < particle_size / 2)
