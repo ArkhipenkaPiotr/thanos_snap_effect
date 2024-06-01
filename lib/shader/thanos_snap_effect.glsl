@@ -3,7 +3,7 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
-#define particle_size 0.026
+#define particle_size 0.04
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
@@ -43,7 +43,7 @@ float powerInterpolation(float v0, float v1, float t, float p) {
 float randomAngle(int i)
 {
     float randomValue = fract(sin(float(i) * 12.9898 + 78.233) * 43758.5453);
-    return mix(0, -3.14, randomValue);
+    return mix(-0.76, -2.2, randomValue);
 }
 
 
@@ -55,27 +55,30 @@ void main()
     {
         float angle = randomAngle(i);
         vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), float(i) / (1 / particle_size)) * particle_size;
-        vec2 zeroPointPixelPos = vec2(uv.x - animationValue * cos(angle), uv.y - animationValue * sin(angle));
-        if (distance(particleCenterPos, zeroPointPixelPos) < particle_size / 2)
+        float delay = calculateDelay(particleCenterPos);
+        float adjustedTime = max(0.0, animationValue - delay);
+        vec2 zeroPointPixelPos = vec2(uv.x - adjustedTime * cos(angle), uv.y - adjustedTime * sin(angle));
+        if (zeroPointPixelPos.x >= particleCenterPos.x - particle_size / 2 && zeroPointPixelPos.x <= particleCenterPos.x + particle_size / 2 &&
+        zeroPointPixelPos.y >= particleCenterPos.y - particle_size / 2 && zeroPointPixelPos.y <= particleCenterPos.y + particle_size / 2)
         {
             fragColor = texture(uImageTexture, zeroPointPixelPos);
             return;
         }
     }
     fragColor = vec4(0.0, 0.0, 0.0, 0.0);
-//    vec2 zeroPointPixelPos = calculateZeroPointPixelPos(uv, animationValue);
-//    if (zeroPointPixelPos.x < 0.0 || zeroPointPixelPos.x > 1.0 || zeroPointPixelPos.y < 0.0 || zeroPointPixelPos.y > 1.0)
-//    {
-//        fragColor = vec4(0.0, 0.0, 0.0, 0.0);
-//    } else {
-//        vec4 zeroPointPixelColor = texture(uImageTexture, zeroPointPixelPos);
-//        float particleDelay = calculateDelay(zeroPointPixelPos);
-//        if (animationValue - particleDelay < 0.0)
-//        {
-//            fragColor = zeroPointPixelColor;
-//        } else {
-//            float alpha = powerInterpolation(zeroPointPixelColor.a, 0.0, (animationValue - particleDelay) / particle_lifetime, 2);
-//            fragColor = vec4(zeroPointPixelColor.rgb, alpha);
-//        }
-//    }
+    //    vec2 zeroPointPixelPos = calculateZeroPointPixelPos(uv, animationValue);
+    //    if (zeroPointPixelPos.x < 0.0 || zeroPointPixelPos.x > 1.0 || zeroPointPixelPos.y < 0.0 || zeroPointPixelPos.y > 1.0)
+    //    {
+    //        fragColor = vec4(0.0, 0.0, 0.0, 0.0);
+    //    } else {
+    //        vec4 zeroPointPixelColor = texture(uImageTexture, zeroPointPixelPos);
+    //        float particleDelay = calculateDelay(zeroPointPixelPos);
+    //        if (animationValue - particleDelay < 0.0)
+    //        {
+    //            fragColor = zeroPointPixelColor;
+    //        } else {
+    //            float alpha = powerInterpolation(zeroPointPixelColor.a, 0.0, (animationValue - particleDelay) / particle_lifetime, 2);
+    //            fragColor = vec4(zeroPointPixelColor.rgb, alpha);
+    //        }
+    //    }
 }
