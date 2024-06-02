@@ -31,7 +31,7 @@ void main()
     for (int i = 0; i < int(pow(1 / particle_size, 2)); i++)
     {
         float angle = randomAngle(i);
-        vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), float(i) / (1 / particle_size)) * particle_size;
+        vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), int(float(i) / (1 / particle_size))) * particle_size + particle_size / 2;
         float delay = calculateDelay(particleCenterPos);
         float adjustedTime = max(0.0, animationValue - delay);
         vec2 zeroPointPixelPos = vec2(uv.x - adjustedTime * cos(angle), uv.y - adjustedTime * sin(angle));
