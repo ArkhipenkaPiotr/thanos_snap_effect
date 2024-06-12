@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -70,7 +72,11 @@ class _SnappableState extends State<Snappable> {
 }
 
 class _SnappableController {
+  static const _particleSize = 0.04;
+
   final Animation animation;
+
+  List<Uint8List>? _particlesMap;
 
   final _containerKey = GlobalKey();
 
@@ -97,10 +103,17 @@ class _SnappableController {
     final snapshotInfo = await _capture();
     _currentSnapshotInfo = snapshotInfo;
 
-    final random = Random();
     _shader?.setFloat(0, snapshotInfo.width);
     _shader?.setFloat(1, snapshotInfo.height);
     _shader?.setImageSampler(0, snapshotInfo.image);
+
+    _particlesMap = List.generate(snapshotInfo.height.toInt(), (index) {
+      return Uint8List(snapshotInfo.width.toInt() * 4);
+    });
+
+    _updateParticlesMap(0);
+
+    _shader?.setImageSampler(1, await _generateParticlesMap());
   }
 
   Future<_SnapshotInfo> _capture() async {
@@ -114,7 +127,7 @@ class _SnappableController {
     return _SnapshotInfo(image, width, height);
   }
 
-  void _onControllerChange() {
+  void _onControllerChange() async {
     if (animation.value == 0 || !_snapshotReady) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         _currentSnapshotInfo = null;
@@ -123,6 +136,81 @@ class _SnappableController {
       return;
     }
     _shader?.setFloat(2, animation.value);
+    _updateParticlesMap(animation.value);
+    _shader?.setImageSampler(1, await _generateParticlesMap());
+  }
+
+  void _updateParticlesMap(double animationValue) {
+    final particlesMap = _particlesMap;
+    if (particlesMap == null) return;
+
+    for (var particleIndex = 0;
+        particleIndex < 1 / _particleSize / _particleSize;
+        particleIndex++) {
+      final particlePosition = _particlePosition(particleIndex, animationValue);
+      final x = particlePosition.$1;
+      final y = particlePosition.$2;
+
+      if (x < 0 || x >= _currentSnapshotInfo!.width || y < 0 || y >= _currentSnapshotInfo!.height) {
+        continue;
+      }
+
+      final particleSize = _currentSnapshotInfo!.width * _particleSize;
+      for (var i = (y - particleSize / 2).toInt(); i < (y + particleSize / 2).toInt(); i++) {
+        if (i < 0 || i >= _currentSnapshotInfo!.height) {
+          continue;
+        }
+        for (var j = (x - particleSize / 2).toInt(); j < x + particleSize / 2; j++) {
+          if (j < 0 || j >= _currentSnapshotInfo!.width) {
+            continue;
+          }
+          final pixelIndex = j * 4;
+          final a = particleIndex % 256;
+          final b = (particleIndex ~/ 256) % 256;
+          final g = (particleIndex ~/ 256 ~/ 256) % 256;
+          final r = (particleIndex ~/ 256 ~/ 256 ~/ 256) % 256;
+          particlesMap[i][pixelIndex] = r;
+          particlesMap[i][pixelIndex + 1] = g;
+          particlesMap[i][pixelIndex + 2] = b;
+          particlesMap[i][pixelIndex + 3] = a;
+        }
+      }
+    }
+  }
+
+  Future<ui.Image> _generateParticlesMap() {
+    final completer = Completer<ui.Image>();
+    ui.decodeImageFromPixels(
+      Uint8List.fromList(_particlesMap!.expand((e) => e).toList()),
+      _currentSnapshotInfo!.width.toInt(),
+      _currentSnapshotInfo!.height.toInt(),
+      ui.PixelFormat.rgba8888,
+      (result) {
+        completer.complete(result);
+      },
+    );
+    return completer.future;
+  }
+
+  (int, int) _particlePosition(int particleIndex, double animationValue) {
+    final initialPosition = _particleInitialPosition(particleIndex);
+    final movementAngle = _particleMovementAngle(particleIndex);
+    final x = initialPosition.$1 + cos(movementAngle) * animationValue;
+    final y = initialPosition.$2 + sin(movementAngle) * animationValue;
+    return (x.toInt(), y.toInt());
+  }
+
+  (int, int) _particleInitialPosition(int particleIndex) {
+    final particleWidth = _currentSnapshotInfo!.width * _particleSize;
+    final x = particleIndex * particleWidth % _currentSnapshotInfo!.width + particleWidth / 2;
+    final y = particleIndex * particleWidth ~/ _currentSnapshotInfo!.width * particleWidth +
+        particleWidth / 2;
+    return (x.toInt(), y.toInt());
+  }
+
+  double _particleMovementAngle(int particleIndex) {
+    final randomValue = (sin(particleIndex * 12.9898 + 78.233) * 43758.5453) % 1;
+    return randomValue * 1.44 - 0.76;
   }
 
   void dispose() {

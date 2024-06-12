@@ -7,6 +7,7 @@
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
+uniform sampler2D uParticlesMap;
 // Current animation value, from 0.0 to 1.0.
 uniform float animationValue;
 
