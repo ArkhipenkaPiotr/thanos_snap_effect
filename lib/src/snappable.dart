@@ -214,7 +214,7 @@ class _SnappableController {
 
   double _particleMovementAngle(int particleIndex) {
     final randomValue = (sin(particleIndex * 12.9898 + 78.233) * 43758.5453) % 1;
-    return randomValue * 1.44 - 0.76;
+    return (-2.2) * (1 - randomValue) + (-0.76) * randomValue;
   }
 
   void dispose() {

@@ -30,7 +30,9 @@ void main()
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
     vec4 indexNumber = texture(uParticlesMap, uv);
-    int i = int(indexNumber.r * 255.0 * 255.0 * 255.0 + indexNumber.g * 255.0 * 255.0 + indexNumber.b * 255.0 + indexNumber.a);
+    int i = int(indexNumber.r * 256.0 * 256.0 * 256.0 + indexNumber.g * 256.0 * 256.0 + indexNumber.b * 256.0 + indexNumber.a);
+
+//    fragColor = vec4(mod(indexNumber.a, 256), mod(indexNumber.a, 256), mod(indexNumber.a, 256), 255);
     float angle = randomAngle(i);
     vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), int(float(i) / (1 / particle_size))) * particle_size + particle_size / 2;
     float delay = calculateDelay(particleCenterPos);
@@ -44,4 +46,6 @@ void main()
         return;
     }
     fragColor = vec4(0.0, 0.0, 0.0, 0.0);
+
+//    fragColor = texture(uImageTexture, zeroPointPixelPos);
 }
