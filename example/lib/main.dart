@@ -53,6 +53,7 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
           ),
           Snappable(
             animation: _animationController,
+            outerPadding: EdgeInsets.zero,
             child: Image.network('https://picsum.photos/300/200'),
           ),
           const Spacer(),

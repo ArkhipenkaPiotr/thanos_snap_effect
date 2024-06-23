@@ -3,7 +3,7 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
-#define particle_size 0.04
+#define particle_size 0.1
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
@@ -30,7 +30,7 @@ void main()
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
     vec4 indexNumber = texture(uParticlesMap, uv);
-    int i = int(indexNumber.r * 256.0 * 256.0 * 256.0 + indexNumber.g * 256.0 * 256.0 + indexNumber.b * 256.0 + indexNumber.a);
+    int i = int(indexNumber.r * 256.0 * 256.0 * 256.0 * 256 + indexNumber.g * 256.0 * 256.0 * 256.0 + indexNumber.b * 256.0 * 256.0 + indexNumber.a * 256.0);
 
 //    fragColor = vec4(mod(indexNumber.a, 256), mod(indexNumber.a, 256), mod(indexNumber.a, 256), 255);
     float angle = randomAngle(i);
@@ -45,7 +45,7 @@ void main()
         fragColor = texture(uImageTexture, zeroPointPixelPos);
         return;
     }
-    fragColor = vec4(0.0, 0.0, 0.0, 0.0);
+    fragColor = vec4(0.0, 0.0, 0.0, 1.0);
 
 //    fragColor = texture(uImageTexture, zeroPointPixelPos);
 }

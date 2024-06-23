@@ -72,7 +72,7 @@ class _SnappableState extends State<Snappable> {
 }
 
 class _SnappableController {
-  static const _particleSize = 0.04;
+  static const _particleSize = 0.1;
   static const _particlesInRow = 1 / _particleSize;
 
   final Animation animation;
@@ -181,12 +181,19 @@ class _SnappableController {
 
   Future<ui.Image> _generateParticlesMap() {
     final completer = Completer<ui.Image>();
+
+    final pixelsList = Uint8List.fromList(_particlesMap!.expand((e) => e).toList());
     ui.decodeImageFromPixels(
-      Uint8List.fromList(_particlesMap!.expand((e) => e).toList()),
+      pixelsList,
       _currentSnapshotInfo!.width.toInt(),
       _currentSnapshotInfo!.height.toInt(),
       ui.PixelFormat.rgba8888,
-      (result) {
+      (result) async {
+        // final byteData = await result.toByteData(format: ui.ImageByteFormat.rawRgba);
+        // for (var i = 1; i < byteData!.lengthInBytes; i+=4) {
+        //   final byte = byteData.getUint8(i);
+        //   print('Index: $i, Value: $byte');
+        // }
         completer.complete(result);
       },
     );
@@ -196,8 +203,8 @@ class _SnappableController {
   (int, int) _particlePosition(int particleIndex, double animationValue) {
     final initialPosition = _particleInitialPosition(particleIndex);
     final movementAngle = _particleMovementAngle(particleIndex);
-    final x = initialPosition.$1 + cos(movementAngle) * animationValue;
-    final y = initialPosition.$2 + sin(movementAngle) * animationValue;
+    final x = initialPosition.$1 + cos(movementAngle) * animationValue * 256;
+    final y = initialPosition.$2 + sin(movementAngle) * animationValue * 256;
     return (x.toInt(), y.toInt());
   }
 
