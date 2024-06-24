@@ -72,7 +72,7 @@ class _SnappableState extends State<Snappable> {
 }
 
 class _SnappableController {
-  static const _particleSize = 0.1;
+  static const _particleSize = 0.02;
   static const _particlesInRow = 1 / _particleSize;
 
   final Animation animation;
@@ -203,8 +203,8 @@ class _SnappableController {
   (int, int) _particlePosition(int particleIndex, double animationValue) {
     final initialPosition = _particleInitialPosition(particleIndex);
     final movementAngle = _particleMovementAngle(particleIndex);
-    final x = initialPosition.$1 + cos(movementAngle) * animationValue * 256;
-    final y = initialPosition.$2 + sin(movementAngle) * animationValue * 256;
+    final x = initialPosition.$1 + cos(movementAngle) * animationValue * _currentSnapshotInfo!.width;
+    final y = initialPosition.$2 + sin(movementAngle) * animationValue * _currentSnapshotInfo!.height;
     return (x.toInt(), y.toInt());
   }
 
@@ -222,6 +222,7 @@ class _SnappableController {
   double _particleMovementAngle(int particleIndex) {
     final randomValue = (sin(particleIndex * 12.9898 + 78.233) * 43758.5453) % 1;
     return (-2.2) * (1 - randomValue) + (-0.76) * randomValue;
+    // return -2.2;
   }
 
   void dispose() {
