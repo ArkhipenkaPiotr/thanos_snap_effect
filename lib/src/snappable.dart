@@ -72,7 +72,7 @@ class _SnappableState extends State<Snappable> {
 }
 
 class _SnappableController {
-  static const _particleSize = 0.02;
+  static const _particleSize = 0.2;
   static const _particlesInRow = 1 / _particleSize;
 
   final Animation animation;
@@ -157,11 +157,11 @@ class _SnappableController {
       }
 
       final particleSize = _currentSnapshotInfo!.width * _particleSize;
-      for (var i = (y - particleSize / 2).toInt(); i < (y + particleSize / 2).toInt(); i++) {
+      for (var i = (y - particleSize / 2).toInt(); i <= (y + particleSize / 2).toInt(); i++) {
         if (i < 0 || i >= _currentSnapshotInfo!.height) {
           continue;
         }
-        for (var j = (x - particleSize / 2).toInt(); j < x + particleSize / 2; j++) {
+        for (var j = (x - particleSize / 2).toInt(); j <= x + particleSize / 2; j++) {
           if (j < 0 || j >= _currentSnapshotInfo!.width) {
             continue;
           }
