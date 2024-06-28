@@ -72,7 +72,7 @@ class _SnappableState extends State<Snappable> {
 }
 
 class _SnappableController {
-  static const _particleSize = 0.2;
+  static const _particleSize = 0.04;
   static const _particlesInRow = 1 / _particleSize;
 
   final Animation animation;
@@ -220,7 +220,7 @@ class _SnappableController {
   }
 
   double _particleMovementAngle(int particleIndex) {
-    final randomValue = (sin(particleIndex * 12.9898 + 78.233) * 43758.5453) % 1;
+    final randomValue = (sin(particleIndex) * 150) % 1;
     return (-2.2) * (1 - randomValue) + (-0.76) * randomValue;
     // return -2.2;
   }

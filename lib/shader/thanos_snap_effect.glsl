@@ -3,7 +3,7 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
-#define particle_size 0.2
+#define particle_size 0.04
 #define particles_in_row 1 / particle_size
 #define particles_count particles_in_row * particles_in_row
 
@@ -22,7 +22,7 @@ float calculateDelay(vec2 uv)
 
 float randomAngle(int i)
 {
-    float randomValue = mod(sin(i * 12.9898 + 78.233) * 43758.5453, 1);
+    float randomValue = mod(sin(i) * 150, 1);
     return (-2.2) * (1 - randomValue) + (-0.76) * randomValue;
 //    return -2.2;
 }
@@ -78,7 +78,7 @@ void main()
         fragColor = texture(uImageTexture, zeroPointPixelPos);
         return;
     }
-    fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    fragColor = vec4(0.0, 0.0, 0.0, 0.0);
 
 //        fragColor = texture(uImageTexture, zeroPointPixelPos);
 }
