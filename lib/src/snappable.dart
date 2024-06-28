@@ -72,7 +72,7 @@ class _SnappableState extends State<Snappable> {
 }
 
 class _SnappableController {
-  static const _particleSize = 0.04;
+  static const _particleSize = 0.02;
   static const _particlesInRow = 1 / _particleSize;
 
   final Animation animation;

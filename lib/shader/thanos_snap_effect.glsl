@@ -3,7 +3,7 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
-#define particle_size 0.04
+#define particle_size 0.02
 #define particles_in_row 1 / particle_size
 #define particles_count particles_in_row * particles_in_row
 
