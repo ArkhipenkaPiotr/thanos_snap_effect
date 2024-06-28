@@ -156,12 +156,13 @@ class _SnappableController {
         continue;
       }
 
-      final particleSize = _currentSnapshotInfo!.width * _particleSize;
-      for (var i = (y - particleSize / 2).toInt(); i <= (y + particleSize / 2).toInt(); i++) {
+      final particleWidth = _currentSnapshotInfo!.width * _particleSize;
+      final particleHeight = _currentSnapshotInfo!.height * _particleSize;
+      for (var i = (y - particleHeight / 2).toInt(); i <= (y + particleHeight / 2).toInt(); i++) {
         if (i < 0 || i >= _currentSnapshotInfo!.height) {
           continue;
         }
-        for (var j = (x - particleSize / 2).toInt(); j <= x + particleSize / 2; j++) {
+        for (var j = (x - particleWidth / 2).toInt(); j <= x + particleWidth / 2; j++) {
           if (j < 0 || j >= _currentSnapshotInfo!.width) {
             continue;
           }

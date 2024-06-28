@@ -57,13 +57,13 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
             child: Image.network('https://picsum.photos/300/200'),
           ),
           const Spacer(),
-          // Snappable(
-          //   animation: _animationController,
-          //   child: const FlutterLogo(
-          //     size: 200,
-          //     style: FlutterLogoStyle.stacked,
-          //   ),
-          // ),
+          Snappable(
+            animation: _animationController,
+            child: const FlutterLogo(
+              size: 200,
+              style: FlutterLogoStyle.stacked,
+            ),
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.all(32.0),
