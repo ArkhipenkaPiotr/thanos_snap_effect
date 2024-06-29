@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:thanos_snap_effect/src/shader_painter.dart';
+
+import 'image_generator.dart';
 
 class Snappable extends StatefulWidget {
   final Widget child;
@@ -114,7 +117,8 @@ class _SnappableController {
 
     _updateParticlesMap(0);
 
-    _shader?.setImageSampler(1, await _generateParticlesMap());
+    final particlesMap = await _generateParticlesMap();
+    _shader?.setImageSampler(1, particlesMap);
   }
 
   Future<_SnapshotInfo> _capture() async {
@@ -136,9 +140,16 @@ class _SnappableController {
       });
       return;
     }
+    final startTimestamp = DateTime.now();
+    print('Start timestamp: $startTimestamp');
     _shader?.setFloat(2, animation.value);
     _updateParticlesMap(animation.value);
-    _shader?.setImageSampler(1, await _generateParticlesMap());
+    final updateTimestamp = DateTime.now();
+    print('Update particles map: ${updateTimestamp.difference(startTimestamp).inMilliseconds}ms');
+    final particlesMap = await _generateParticlesMap();
+    _shader?.setImageSampler(1, particlesMap);
+    final endTimestamp = DateTime.now();
+    print('Generate particles map: ${endTimestamp.difference(updateTimestamp).inMilliseconds}ms');
   }
 
   void _updateParticlesMap(double animationValue) {
@@ -181,31 +192,17 @@ class _SnappableController {
   }
 
   Future<ui.Image> _generateParticlesMap() {
-    final completer = Completer<ui.Image>();
-
-    final pixelsList = Uint8List.fromList(_particlesMap!.expand((e) => e).toList());
-    ui.decodeImageFromPixels(
-      pixelsList,
-      _currentSnapshotInfo!.width.toInt(),
-      _currentSnapshotInfo!.height.toInt(),
-      ui.PixelFormat.rgba8888,
-      (result) async {
-        // final byteData = await result.toByteData(format: ui.ImageByteFormat.rawRgba);
-        // for (var i = 1; i < byteData!.lengthInBytes; i+=4) {
-        //   final byte = byteData.getUint8(i);
-        //   print('Index: $i, Value: $byte');
-        // }
-        completer.complete(result);
-      },
-    );
-    return completer.future;
+    return generateParticlesMap(
+        _particlesMap!, _currentSnapshotInfo!.width, _currentSnapshotInfo!.height);
   }
 
   (int, int) _particlePosition(int particleIndex, double animationValue) {
     final initialPosition = _particleInitialPosition(particleIndex);
     final movementAngle = _particleMovementAngle(particleIndex);
-    final x = initialPosition.$1 + cos(movementAngle) * animationValue * _currentSnapshotInfo!.width;
-    final y = initialPosition.$2 + sin(movementAngle) * animationValue * _currentSnapshotInfo!.height;
+    final x =
+        initialPosition.$1 + cos(movementAngle) * animationValue * _currentSnapshotInfo!.width;
+    final y =
+        initialPosition.$2 + sin(movementAngle) * animationValue * _currentSnapshotInfo!.height;
     return (x.toInt(), y.toInt());
   }
 

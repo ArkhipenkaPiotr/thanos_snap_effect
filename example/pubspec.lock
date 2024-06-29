@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dart_ui_isolate:
+    dependency: transitive
+    description:
+      name: dart_ui_isolate
+      sha256: bd531558002a00de0ac7dd73c84887dd01e652bd254d3098d7763881535196d7
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   fake_async:
     dependency: transitive
     description:
@@ -216,5 +224,5 @@ packages:
     source: hosted
     version: "13.0.0"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
-  flutter: ">=1.17.0"
+  dart: ">=3.2.5 <4.0.0"
+  flutter: ">=3.3.0"
