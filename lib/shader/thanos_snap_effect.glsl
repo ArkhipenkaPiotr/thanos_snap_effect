@@ -24,7 +24,6 @@ float calculateDelay(vec2 uv)
 float randomAngle(int i)
 {
     float randomValue = fract(sin(float(i) * 12.9898 + 78.233) * 43758.5453);
-//    final angle should be in range [min_movement_angle, max_movement_angle] and should be dividable by movement_angle_step
     return min_movement_angle + floor(randomValue * movement_angles_count) * movement_angle_step;
 }
 
@@ -33,9 +32,9 @@ void main()
 {
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
-    for (float movementAngle = min_movement_angle; movementAngle <= max_movement_angle; movementAngle += movement_angle_step)
+    for (float searchMovementAngle = min_movement_angle; searchMovementAngle <= max_movement_angle; searchMovementAngle += movement_angle_step)
     {
-        vec2 searchPoint = vec2(uv.x - animationValue * cos(movementAngle), uv.y - animationValue * sin(movementAngle));
+        vec2 searchPoint = vec2(uv.x - animationValue * cos(searchMovementAngle), uv.y - animationValue * sin(searchMovementAngle));
         int i = int(searchPoint.x / particle_size) + int(searchPoint.y / particle_size) * int(1 / particle_size);
 
         if (i < 0 || i >= int(pow(1 / particle_size, 2)))
@@ -55,19 +54,5 @@ void main()
         }
     }
 
-    //    for (int i = 0; i < int(pow(1 / particle_size, 2)); i++)
-    //    {
-    //        float angle = randomAngle(i);
-    //        vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), int(float(i) / (1 / particle_size))) * particle_size + particle_size / 2;
-    //        float delay = calculateDelay(particleCenterPos);
-    //        float adjustedTime = max(0.0, animationValue);
-    //        vec2 zeroPointPixelPos = vec2(uv.x - adjustedTime * cos(angle), uv.y - adjustedTime * sin(angle));
-    //        if (zeroPointPixelPos.x >= particleCenterPos.x - particle_size / 2 && zeroPointPixelPos.x <= particleCenterPos.x + particle_size / 2 &&
-    //        zeroPointPixelPos.y >= particleCenterPos.y - particle_size / 2 && zeroPointPixelPos.y <= particleCenterPos.y + particle_size / 2)
-    //        {
-    //            fragColor = texture(uImageTexture, zeroPointPixelPos);
-    //            return;
-    //        }
-    //    }
     fragColor = vec4(0.0, 0.0, 0.0, 0.0);
 }
