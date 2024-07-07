@@ -6,6 +6,8 @@
 #define particle_size 0.01
 #define min_movement_angle -2.2
 #define max_movement_angle -0.76
+#define movement_angles_count 10
+#define movement_angle_step (max_movement_angle - min_movement_angle) / movement_angles_count
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
@@ -22,7 +24,8 @@ float calculateDelay(vec2 uv)
 float randomAngle(int i)
 {
     float randomValue = fract(sin(float(i) * 12.9898 + 78.233) * 43758.5453);
-    return mix(min_movement_angle, max_movement_angle, randomValue);
+//    final angle should be in range [min_movement_angle, max_movement_angle] and should be dividable by movement_angle_step
+    return min_movement_angle + floor(randomValue * movement_angles_count) * movement_angle_step;
 }
 
 
@@ -30,9 +33,9 @@ void main()
 {
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
-    for (float reverseAngle = -max_movement_angle; reverseAngle < -min_movement_angle; reverseAngle += 0.01)
+    for (float movementAngle = min_movement_angle; movementAngle <= max_movement_angle; movementAngle += movement_angle_step)
     {
-        vec2 searchPoint = vec2(uv.x + animationValue * cos(reverseAngle), uv.y + animationValue * sin(reverseAngle));
+        vec2 searchPoint = vec2(uv.x - animationValue * cos(movementAngle), uv.y - animationValue * sin(movementAngle));
         int i = int(searchPoint.x / particle_size) + int(searchPoint.y / particle_size) * int(1 / particle_size);
 
         if (i < 0 || i >= int(pow(1 / particle_size, 2)))
