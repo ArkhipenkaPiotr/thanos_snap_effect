@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -97,7 +96,6 @@ class _SnappableController {
     final snapshotInfo = await _capture();
     _currentSnapshotInfo = snapshotInfo;
 
-    final random = Random();
     _shader?.setFloat(0, snapshotInfo.width);
     _shader?.setFloat(1, snapshotInfo.height);
     _shader?.setImageSampler(0, snapshotInfo.image);
