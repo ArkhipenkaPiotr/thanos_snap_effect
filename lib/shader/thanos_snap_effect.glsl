@@ -8,6 +8,7 @@
 #define max_movement_angle -0.76
 #define movement_angles_count 10
 #define movement_angle_step (max_movement_angle - min_movement_angle) / movement_angles_count
+#define pi 3.14159265359
 
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
@@ -16,9 +17,14 @@ uniform float animationValue;
 
 out vec4 fragColor;
 
-float calculateDelay(vec2 uv)
+float delayFromParticleCenterPos(float x)
 {
-    return (1. - particle_lifetime)*(1 + uv.x - uv.y) / 2;
+    return (1. - particle_lifetime)*x;
+}
+
+float delayFromColumnIndex(int i)
+{
+    return (1. - particle_lifetime) * (i / (1 / particle_size));
 }
 
 float randomAngle(int i)
@@ -27,6 +33,40 @@ float randomAngle(int i)
     return min_movement_angle + floor(randomValue * movement_angles_count) * movement_angle_step;
 }
 
+int calculateInitialParticleIndex(vec2 point, float angle, float animationValue)
+{
+    //  x0 value is calculated from the following equation:
+
+    //  x = x0 + t * cos(angle)
+    //  t = animationValue - delay
+    //  delay = (1 - particle_lifetime) * x0
+
+    //  t = animationValue - (1 - particle_lifetime) * x0
+    //  x = x0 + (animationValue - (1 - particle_lifetime) * x0) * cos(angle)
+    //  x = x0 + animationValue * cos(angle) - (1 - particle_lifetime) * x0 * cos(angle)
+    //  x = x0 - (1 - particle_lifetime) * x0 * cos(angle) + animationValue * cos(angle)
+    //  x = x0 * (1 - (1 - particle_lifetime) * cos(angle)) + animationValue * cos(angle)
+    //  x - animationValue * cos(angle) = x0 * (1 - (1 - particle_lifetime) * cos(angle))
+    //  x0 = (x - animationValue * cos(angle)) / (1 - (1 - particle_lifetime) * cos(angle))
+
+    float x0 = (point.x - animationValue * cos(angle)) / (1. - (1. - particle_lifetime) * cos(angle));
+    float delay = delayFromParticleCenterPos(x0);
+    float y0 = point.y - (animationValue - delay) * sin(angle);
+
+    //  If particle is not yet moved, animationValue is less than delay, and particle moves to an opposite direction so we should calculate a particle index from the original point.
+
+    // If the particle is supposed to move to the left, but it moves to the right (because of the reason above), return the original point particle index.
+    if (angle <= - pi / 2 && point.x >= x0)
+    {
+        return (int(point.x / particle_size) + int(point.y / particle_size) * int(1 / particle_size));
+    }
+    // If the particle is supposed to move to the right, but it moves to the left (because of the reason above), return the original point particle index.
+    if (angle >= - pi / 2 && point.x < x0)
+    {
+        return (int(point.x / particle_size) + int(point.y / particle_size) * int(1 / particle_size));
+    }
+    return int(x0 / particle_size) + int(y0 / particle_size) * int(1 / particle_size);
+}
 
 void main()
 {
@@ -34,17 +74,15 @@ void main()
 
     for (float searchMovementAngle = min_movement_angle; searchMovementAngle <= max_movement_angle; searchMovementAngle += movement_angle_step)
     {
-        vec2 searchPoint = vec2(uv.x - animationValue * cos(searchMovementAngle), uv.y - animationValue * sin(searchMovementAngle));
-        int i = int(searchPoint.x / particle_size) + int(searchPoint.y / particle_size) * int(1 / particle_size);
-
+        int i = calculateInitialParticleIndex(uv, searchMovementAngle, animationValue);
         if (i < 0 || i >= int(pow(1 / particle_size, 2)))
         {
             continue;
         }
         float angle = randomAngle(i);
         vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), int(float(i) / (1 / particle_size))) * particle_size + particle_size / 2;
-        float delay = calculateDelay(particleCenterPos);
-        float adjustedTime = max(0.0, animationValue);
+        float delay = delayFromParticleCenterPos(particleCenterPos.x);
+        float adjustedTime = max(0.0, animationValue - delay);
         vec2 zeroPointPixelPos = vec2(uv.x - adjustedTime * cos(angle), uv.y - adjustedTime * sin(angle));
         if (zeroPointPixelPos.x >= particleCenterPos.x - particle_size / 2 && zeroPointPixelPos.x <= particleCenterPos.x + particle_size / 2 &&
         zeroPointPixelPos.y >= particleCenterPos.y - particle_size / 2 && zeroPointPixelPos.y <= particleCenterPos.y + particle_size / 2)
