@@ -3,6 +3,7 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
+#define fade_out_duration 0.4
 #define particle_size 0.01
 #define min_movement_angle -2.2
 #define max_movement_angle -0.76
@@ -87,7 +88,11 @@ void main()
         if (zeroPointPixelPos.x >= particleCenterPos.x - particle_size / 2 && zeroPointPixelPos.x <= particleCenterPos.x + particle_size / 2 &&
         zeroPointPixelPos.y >= particleCenterPos.y - particle_size / 2 && zeroPointPixelPos.y <= particleCenterPos.y + particle_size / 2)
         {
-            fragColor = texture(uImageTexture, zeroPointPixelPos);
+            vec4 zeroPointPixelColor = texture(uImageTexture, zeroPointPixelPos);
+            float alpha = zeroPointPixelColor.a;
+            float fadeOutLivetime = max(0.0, adjustedTime - (particle_lifetime - fade_out_duration));
+            alpha = alpha * (1.0 - fadeOutLivetime / fade_out_duration);
+            fragColor = vec4(zeroPointPixelColor.rgb, alpha);
             return;
         }
     }
