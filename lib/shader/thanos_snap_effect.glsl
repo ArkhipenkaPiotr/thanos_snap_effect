@@ -10,10 +10,10 @@
 #define movement_angle_step (max_movement_angle - min_movement_angle) / movement_angles_count
 #define pi 3.14159265359
 
-uniform vec2 uSize;
-uniform sampler2D uImageTexture;
 // Current animation value, from 0.0 to 1.0.
 uniform float animationValue;
+uniform vec2 uSize;
+uniform sampler2D uImageTexture;
 
 out vec4 fragColor;
 

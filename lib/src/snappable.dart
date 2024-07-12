@@ -96,8 +96,9 @@ class _SnappableController {
     final snapshotInfo = await _capture();
     _currentSnapshotInfo = snapshotInfo;
 
-    _shader?.setFloat(0, snapshotInfo.width);
-    _shader?.setFloat(1, snapshotInfo.height);
+    _shader?.setFloat(1, snapshotInfo.width);
+    _shader?.setFloat(2, snapshotInfo.height);
+    _shader?.setFloat(0, 0.5);
     _shader?.setImageSampler(0, snapshotInfo.image);
   }
 
@@ -120,7 +121,7 @@ class _SnappableController {
       });
       return;
     }
-    _shader?.setFloat(2, animation.value);
+    _shader?.setFloat(0, animation.value);
   }
 
   void dispose() {
