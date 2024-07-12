@@ -3,7 +3,7 @@
 #include<flutter/runtime_effect.glsl>
 
 #define particle_lifetime 0.6
-#define fade_out_duration 0.4
+#define fade_out_duration 0.3
 #define particle_size 0.01
 #define min_movement_angle -2.2
 #define max_movement_angle -0.76
