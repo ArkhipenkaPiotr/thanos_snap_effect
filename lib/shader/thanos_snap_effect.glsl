@@ -2,14 +2,14 @@
 
 #include<flutter/runtime_effect.glsl>
 
-#define pi 3.14159265359
 #define particle_lifetime 0.6
 #define fade_out_duration 0.3
 #define particle_size 0.01
-#define min_movement_angle -pi + pi / 4
-#define max_movement_angle 0 - pi / 4
+#define min_movement_angle -2.2
+#define max_movement_angle -0.76
 #define movement_angles_count 10
 #define movement_angle_step (max_movement_angle - min_movement_angle) / movement_angles_count
+#define pi 3.14159265359
 
 // Current animation value, from 0.0 to 1.0.
 uniform float animationValue;
