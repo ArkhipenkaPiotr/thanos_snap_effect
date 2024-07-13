@@ -35,12 +35,13 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
     with SingleTickerProviderStateMixin {
   late final _animationController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1000),
+    duration: const Duration(milliseconds: 1500),
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
