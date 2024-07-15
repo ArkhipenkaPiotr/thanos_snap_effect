@@ -95,7 +95,6 @@ class _SnappableController {
   }
 
   Future<void> _snap() async {
-    print('snap');
     _snapshotInProgress = true;
     final snapshotInfo = await _capture();
     _currentSnapshotInfo = snapshotInfo;
