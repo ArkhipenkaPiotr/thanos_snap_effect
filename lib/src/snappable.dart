@@ -57,6 +57,7 @@ class _SnappableState extends State<Snappable> {
                   width: _controller._currentSnapshotInfo!.width,
                   height: _controller._currentSnapshotInfo!.height,
                   child: ShaderPainter(
+                    animationValue: widget.animation.value,
                     shader: _controller._shader!,
                     outerPadding: widget.outerPadding,
                   ),
@@ -77,6 +78,7 @@ class _SnappableController {
   _SnapshotInfo? _currentSnapshotInfo;
 
   bool get _snapshotReady => _currentSnapshotInfo != null;
+  var _snapshotInProgress = false;
 
   _SnappableController({
     required this.animation,
@@ -93,12 +95,15 @@ class _SnappableController {
   }
 
   Future<void> _snap() async {
+    print('snap');
+    _snapshotInProgress = true;
     final snapshotInfo = await _capture();
     _currentSnapshotInfo = snapshotInfo;
+    _snapshotInProgress = false;
 
+    _shader?.setFloat(0, 0);
     _shader?.setFloat(1, snapshotInfo.width);
     _shader?.setFloat(2, snapshotInfo.height);
-    _shader?.setFloat(0, 0.5);
     _shader?.setImageSampler(0, snapshotInfo.image);
   }
 
@@ -114,9 +119,12 @@ class _SnappableController {
   }
 
   void _onControllerChange() {
-    if (animation.value == 0 || !_snapshotReady) {
+    if (animation.value == 0) {
+      _currentSnapshotInfo = null;
+      return;
+    }
+    if (!_snapshotReady && !_snapshotInProgress) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        _currentSnapshotInfo = null;
         _snap();
       });
       return;
