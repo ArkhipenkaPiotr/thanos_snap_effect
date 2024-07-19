@@ -5,6 +5,7 @@
 #define particle_lifetime 0.6
 #define fade_out_duration 0.3
 #define particle_size 0.01
+#define particle_speed 1.0
 #define min_movement_angle -2.2
 #define max_movement_angle -0.76
 #define movement_angles_count 10
@@ -38,21 +39,21 @@ int calculateInitialParticleIndex(vec2 point, float angle, float animationValue)
 {
     //  x0 value is calculated from the following equation:
 
-    //  x = x0 + t * cos(angle)
+    //  x = x0 + t * cos(angle) * particle_speed
     //  t = animationValue - delay
     //  delay = (1 - particle_lifetime) * x0
 
     //  t = animationValue - (1 - particle_lifetime) * x0
-    //  x = x0 + (animationValue - (1 - particle_lifetime) * x0) * cos(angle)
-    //  x = x0 + animationValue * cos(angle) - (1 - particle_lifetime) * x0 * cos(angle)
-    //  x = x0 - (1 - particle_lifetime) * x0 * cos(angle) + animationValue * cos(angle)
-    //  x = x0 * (1 - (1 - particle_lifetime) * cos(angle)) + animationValue * cos(angle)
-    //  x - animationValue * cos(angle) = x0 * (1 - (1 - particle_lifetime) * cos(angle))
-    //  x0 = (x - animationValue * cos(angle)) / (1 - (1 - particle_lifetime) * cos(angle))
+    //  x = x0 + (animationValue - (1 - particle_lifetime) * x0) * cos(angle) * particle_speed
+    //  x = x0 + animationValue * cos(angle) * particle_speed - (1 - particle_lifetime) * x0 * cos(angle) * particle_speed
+    //  x = x0 - (1 - particle_lifetime) * x0 * cos(angle) * particle_speed + animationValue * cos(angle) * particle_speed
+    //  x = x0 * (1 - (1 - particle_lifetime) * cos(angle) * particle_speed) + animationValue * cos(angle) * particle_speed
+    //  x - animationValue * cos(angle) * particle_speed = x0 * (1 - (1 - particle_lifetime) * cos(angle) * particle_speed)
+    //  x0 = (x - animationValue * cos(angle) * particle_speed) / (1 - (1 - particle_lifetime) * cos(angle) * particle_speed)
 
-    float x0 = (point.x - animationValue * cos(angle)) / (1. - (1. - particle_lifetime) * cos(angle));
+    float x0 = (point.x - animationValue * cos(angle) * particle_speed) / (1. - (1. - particle_lifetime) * cos(angle) * particle_speed);
     float delay = delayFromParticleCenterPos(x0);
-    float y0 = point.y - (animationValue - delay) * sin(angle);
+    float y0 = point.y - (animationValue - delay) * sin(angle) * particle_speed;
 
     //  If particle is not yet moved, animationValue is less than delay, and particle moves to an opposite direction so we should calculate a particle index from the original point.
 
@@ -84,7 +85,7 @@ void main()
         vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_size), int(float(i) / (1 / particle_size))) * particle_size + particle_size / 2;
         float delay = delayFromParticleCenterPos(particleCenterPos.x);
         float adjustedTime = max(0.0, animationValue - delay);
-        vec2 zeroPointPixelPos = vec2(uv.x - adjustedTime * cos(angle), uv.y - adjustedTime * sin(angle));
+        vec2 zeroPointPixelPos = vec2(uv.x - adjustedTime * cos(angle) * particle_speed, uv.y - adjustedTime * sin(angle) * particle_speed);
         if (zeroPointPixelPos.x >= particleCenterPos.x - particle_size / 2 && zeroPointPixelPos.x <= particleCenterPos.x + particle_size / 2 &&
         zeroPointPixelPos.y >= particleCenterPos.y - particle_size / 2 && zeroPointPixelPos.y <= particleCenterPos.y + particle_size / 2)
         {
