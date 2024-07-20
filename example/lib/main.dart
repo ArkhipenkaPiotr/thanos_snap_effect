@@ -1,3 +1,4 @@
+import 'package:example/random_image.dart';
 import 'package:flutter/material.dart';
 import 'package:thanos_snap_effect/thanos_snap_effect.dart';
 
@@ -54,7 +55,7 @@ class _SnappableExamplePageState extends State<SnappableExamplePage>
           ),
           Snappable(
             animation: _animationController,
-            child: Image.network('https://picsum.photos/300/200'),
+            child: const RandomImage(),
           ),
           const Spacer(),
           Snappable(

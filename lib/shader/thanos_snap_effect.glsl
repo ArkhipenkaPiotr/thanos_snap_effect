@@ -4,6 +4,7 @@
 
 #define particle_lifetime 0.6
 #define fade_out_duration 0.3
+// 1 must be divisible by this number without a remainder
 #define particle_size 0.01
 #define particle_speed 1.0
 #define min_movement_angle -2.2

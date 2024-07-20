@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class SnappableVisibility extends StatefulWidget {
   final bool visible;
   final Widget child;
+  final Duration duration;
 
   const SnappableVisibility({
     required this.child,
+    required this.duration,
     super.key,
     this.visible = true,
   });
