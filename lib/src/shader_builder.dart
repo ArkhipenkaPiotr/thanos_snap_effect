@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:thanos_snap_effect/src/shader_x/shader_x.dart';
 
 class ShaderBuilder extends StatefulWidget {
-  final Function(BuildContext context, ShaderX shader) builder;
+  final Function(BuildContext context, ShaderX? shader, Widget child) builder;
   final Widget child;
 
   const ShaderBuilder({
@@ -28,9 +28,7 @@ class _ShaderBuilderState extends State<ShaderBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return _shader == null
-        ? widget.child
-        : widget.builder(context, _shader!);
+    return widget.builder(context, _shader, widget.child);
   }
 
   void _initShader() async {

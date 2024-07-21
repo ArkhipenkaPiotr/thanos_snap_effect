@@ -18,27 +18,42 @@ class Snappable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShaderBuilder(
-      builder: (context, shader) {
+      builder: (context, shader, child) {
         return SnapshotBuilder(
           animation: animation,
           onSnapshotReadyListener: (snapshotInfo) {
-            shader.updateSnapshot(snapshotInfo);
+            shader?.updateSnapshot(snapshotInfo);
           },
-          builder: (context, snapshotInfo) {
-            return AnimatedBuilder(
-              animation: animation,
-              builder: (context, snapshot) {
-                shader.setAnimationValue(animation.value);
-                return SizedBox(
-                  width: snapshotInfo.width,
-                  height: snapshotInfo.height,
-                  child: ShaderPainter(
-                    shader: shader.fragmentShader,
-                    outerPadding: outerPadding,
-                    animationValue: animation.value,
-                  ),
-                );
-              }
+          builder: (context, snapshotInfo, child) {
+            return Stack(
+              children: [
+                if (animation.value != 0 && snapshotInfo != null)
+                  AnimatedBuilder(
+                    animation: animation,
+                    builder: (context, snapshot) {
+                      shader?.setAnimationValue(animation.value);
+                      if (shader == null) {
+                        return const SizedBox.shrink();
+                      }
+                      return SizedBox(
+                        width: snapshotInfo.width,
+                        height: snapshotInfo.height,
+                        child: ShaderPainter(
+                          shader: shader.fragmentShader,
+                          outerPadding: outerPadding,
+                          animationValue: animation.value,
+                        ),
+                      );
+                    },
+                  )
+                else
+                  const SizedBox.shrink(),
+                Visibility(
+                  maintainState: true,
+                  visible: animation.value == 0 || snapshotInfo == null,
+                  child: child,
+                ),
+              ],
             );
           },
           child: child,

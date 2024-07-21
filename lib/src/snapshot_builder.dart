@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-typedef SnapshotReadyBuilder = Widget Function(BuildContext context, SnapshotInfo snapshotInfo);
+typedef SnapshotReadyBuilder = Widget Function(
+    BuildContext context, SnapshotInfo? snapshotInfo, Widget child);
 typedef SnapshotReadyListener = void Function(SnapshotInfo snapshotInfo);
 
 class SnapshotBuilder extends StatefulWidget {
@@ -25,7 +26,7 @@ class SnapshotBuilder extends StatefulWidget {
 }
 
 class _SnapshotBuilderState extends State<SnapshotBuilder> {
-  var _containerKey = GlobalKey();
+  final _containerKey = GlobalKey();
   var _snapshotDirty = true;
   var _snapshotInProgress = false;
   SnapshotInfo? _currentSnapshotInfo;
@@ -47,12 +48,13 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    if (_currentSnapshotInfo != null) {
-      return widget.builder(context, _currentSnapshotInfo!);
-    }
-    return RepaintBoundary(
-      key: _containerKey,
-      child: widget.child,
+    return widget.builder(
+      context,
+      _currentSnapshotInfo,
+      RepaintBoundary(
+        key: _containerKey,
+        child: widget.child,
+      ),
     );
   }
 
@@ -66,7 +68,6 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
     if (widget.animation.value == 0) {
       _snapshotDirty = true;
       _currentSnapshotInfo = null;
-      _containerKey = GlobalKey();
       setState(() {});
       return;
     }
