@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
 typedef SnapshotReadyBuilder = Widget Function(
@@ -93,18 +95,23 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
   }
 
   Future<SnapshotInfo?> _capture() async {
-    RenderRepaintBoundary? boundary =
-        _containerKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    final completer = Completer<SnapshotInfo?>();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      RenderRepaintBoundary? boundary =
+      _containerKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
 
-    if (boundary == null) {
-      return null;
-    }
+      if (boundary == null) {
+        completer.complete(null);
+        return;
+      }
 
-    final width = boundary.size.width;
-    final height = boundary.size.height;
-    final image = await boundary.toImage();
+      final width = boundary.size.width;
+      final height = boundary.size.height;
+      final image = await boundary.toImage();
 
-    return SnapshotInfo(image, width, height);
+      completer.complete(SnapshotInfo(image, width, height));
+    });
+    return completer.future;
   }
 }
 
