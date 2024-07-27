@@ -21,7 +21,7 @@ class _AnimationControllerExampleScreenState extends State<AnimationControllerEx
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Animation Controller Example'),
