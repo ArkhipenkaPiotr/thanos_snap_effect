@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:thanos_snap_effect/src/snapshot_builder.dart';
 
 class SnappableStyle {
@@ -15,13 +17,13 @@ class SnappableStyle {
             'particleLifetime must be in the range [0, 1]'),
         assert(fadeOutDuration > 0 && fadeOutDuration <= 1,
             'fadeOutDuration must be in the range [0, 1]'),
-        assert(fadeOutDuration < particleLifetime,
-            'fadeOutDuration must be less than particleLifetime'),
-        assert(
-            particleSpeed > 0 && particleSpeed <= 1, 'particleSpeed must be in the range [0, 1]');
+        assert(fadeOutDuration <= particleLifetime,
+            'fadeOutDuration must be less than particleLifetime');
 }
 
-abstract interface class SnappableParticleSize {
+abstract class SnappableParticleSize {
+  const SnappableParticleSize();
+
   const factory SnappableParticleSize.relative({
     required double width,
     required double height,
@@ -33,10 +35,17 @@ abstract interface class SnappableParticleSize {
   const factory SnappableParticleSize.squareFromRelativeHeight(double height) =
       _SquareFromRelativeHeight;
 
-  (double width, double height) getRelativeParticleSize(SnapshotInfo snapshotInfo);
+  (double width, double height) getSafeRelativeParticleSize(SnapshotInfo snapshotInfo) {
+    final minRelativeParticleWidth = 1 / snapshotInfo.width;
+    final minRelativeParticleHeight = 1 / snapshotInfo.height;
+    final (width, height) = _getRelativeParticleSize(snapshotInfo);
+    return (max(minRelativeParticleWidth, width), max(minRelativeParticleHeight, height));
+  }
+
+  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo);
 }
 
-class _RelativeParticleSize implements SnappableParticleSize {
+class _RelativeParticleSize extends SnappableParticleSize {
   final double width;
   final double height;
 
@@ -47,35 +56,41 @@ class _RelativeParticleSize implements SnappableParticleSize {
         assert(height >= 0 && height <= 0.5, 'height must be in the range [0, 0.5]');
 
   @override
-  (double width, double height) getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
     return (width, height);
   }
 }
 
-class _SquareFromRelativeWidth implements SnappableParticleSize {
+class _SquareFromRelativeWidth extends SnappableParticleSize {
   final double width;
 
   const _SquareFromRelativeWidth(this.width)
       : assert(width >= 0 && width <= 0.5, 'width must be in the range [0, 0.5]');
 
   @override
-  (double width, double height) getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
     final absoluteWidth = snapshotInfo.width * width;
     final relativeHeight = absoluteWidth / snapshotInfo.height;
-    return (width, relativeHeight);
+
+    final roundedWidth = 1 / (1 / width).roundToDouble();
+    final roundedHeight = 1 / (1 / relativeHeight).roundToDouble();
+    return (roundedWidth, roundedHeight);
   }
 }
 
-class _SquareFromRelativeHeight implements SnappableParticleSize {
+class _SquareFromRelativeHeight extends SnappableParticleSize {
   final double height;
 
   const _SquareFromRelativeHeight(this.height)
       : assert(height >= 0 && height <= 0.5, 'height must be in the range [0, 0.5]');
 
   @override
-  (double width, double height) getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
     final absoluteHeight = snapshotInfo.height * height;
     final relativeWidth = absoluteHeight / snapshotInfo.width;
-    return (relativeWidth, height);
+
+    final roundedHeight = 1 / (1 / height).roundToDouble();
+    final roundedWidth = 1 / (1 / relativeWidth).roundToDouble();
+    return (roundedWidth, roundedHeight);
   }
 }

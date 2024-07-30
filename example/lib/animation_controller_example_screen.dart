@@ -43,6 +43,9 @@ class _AnimationControllerExampleScreenState extends State<AnimationControllerEx
           const Spacer(),
           Snappable(
             animation: _animationController,
+            style: const SnappableStyle(
+              particleSize: SnappableParticleSize.squareFromRelativeHeight(0.03),
+            ),
             child: const FlutterLogo(
               size: 200,
               style: FlutterLogoStyle.stacked,

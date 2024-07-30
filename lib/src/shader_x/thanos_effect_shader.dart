@@ -53,7 +53,7 @@ class ThanosSnapEffectStyleProps {
 
   factory ThanosSnapEffectStyleProps.fromSnappableStyle(
       SnappableStyle style, SnapshotInfo snapshotInfo) {
-    final particleSize = style.particleSize.getRelativeParticleSize(snapshotInfo);
+    final particleSize = style.particleSize.getSafeRelativeParticleSize(snapshotInfo);
     return ThanosSnapEffectStyleProps(
       particleLifetime: style.particleLifetime,
       fadeOutDuration: style.fadeOutDuration,
