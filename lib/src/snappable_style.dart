@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/widgets.dart';
 import 'package:thanos_snap_effect/src/snapshot_builder.dart';
 
 class SnappableStyle {
@@ -34,6 +35,11 @@ abstract class SnappableParticleSize {
 
   const factory SnappableParticleSize.squareFromRelativeHeight(double height) =
       _SquareFromRelativeHeight;
+
+  const factory SnappableParticleSize.absolute({
+    required double width,
+    required double height,
+  }) = _AbsoluteParticleSize;
 
   (double width, double height) getSafeRelativeParticleSize(SnapshotInfo snapshotInfo) {
     final minRelativeParticleWidth = 1 / snapshotInfo.width;
@@ -91,6 +97,28 @@ class _SquareFromRelativeHeight extends SnappableParticleSize {
 
     final roundedHeight = 1 / (1 / height).roundToDouble();
     final roundedWidth = 1 / (1 / relativeWidth).roundToDouble();
+    return (roundedWidth, roundedHeight);
+  }
+}
+
+class _AbsoluteParticleSize extends SnappableParticleSize {
+  final double width;
+  final double height;
+
+  const _AbsoluteParticleSize({
+    required this.width,
+    required this.height,
+  })  : assert(width > 0, 'width must be greater than 0'),
+        assert(height > 0, 'height must be greater than 0');
+
+  @override
+  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+    final relativeWidth = width / snapshotInfo.width;
+    final relativeHeight = height / snapshotInfo.height;
+
+    final roundedWidth = 1 / (1 ~/ relativeWidth);
+    final roundedHeight = 1 / (1 ~/ relativeHeight);
+
     return (roundedWidth, roundedHeight);
   }
 }
