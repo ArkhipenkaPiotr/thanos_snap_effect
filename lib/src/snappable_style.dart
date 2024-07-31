@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/widgets.dart';
 import 'package:thanos_snap_effect/src/snapshot_builder.dart';
 
 class SnappableStyle {
@@ -36,15 +35,20 @@ abstract class SnappableParticleSize {
   const factory SnappableParticleSize.squareFromRelativeHeight(double height) =
       _SquareFromRelativeHeight;
 
-  const factory SnappableParticleSize.absolute({
-    required double width,
-    required double height,
-  }) = _AbsoluteParticleSize;
+  const factory SnappableParticleSize.absoluteDp({
+    required int width,
+    required int height,
+  }) = _AbsoluteDpParticleSize;
 
   (double width, double height) getSafeRelativeParticleSize(SnapshotInfo snapshotInfo) {
     final minRelativeParticleWidth = 1 / snapshotInfo.width;
     final minRelativeParticleHeight = 1 / snapshotInfo.height;
-    final (width, height) = _getRelativeParticleSize(snapshotInfo);
+
+    var (width, height) = _getRelativeParticleSize(snapshotInfo);
+
+    width = 1 / (1 ~/ width);
+    height = 1 / (1 ~/ height);
+
     return (max(minRelativeParticleWidth, width), max(minRelativeParticleHeight, height));
   }
 
@@ -78,9 +82,7 @@ class _SquareFromRelativeWidth extends SnappableParticleSize {
     final absoluteWidth = snapshotInfo.width * width;
     final relativeHeight = absoluteWidth / snapshotInfo.height;
 
-    final roundedWidth = 1 / (1 / width).roundToDouble();
-    final roundedHeight = 1 / (1 / relativeHeight).roundToDouble();
-    return (roundedWidth, roundedHeight);
+    return (width, relativeHeight);
   }
 }
 
@@ -95,17 +97,15 @@ class _SquareFromRelativeHeight extends SnappableParticleSize {
     final absoluteHeight = snapshotInfo.height * height;
     final relativeWidth = absoluteHeight / snapshotInfo.width;
 
-    final roundedHeight = 1 / (1 / height).roundToDouble();
-    final roundedWidth = 1 / (1 / relativeWidth).roundToDouble();
-    return (roundedWidth, roundedHeight);
+    return (relativeWidth, height);
   }
 }
 
-class _AbsoluteParticleSize extends SnappableParticleSize {
-  final double width;
-  final double height;
+class _AbsoluteDpParticleSize extends SnappableParticleSize {
+  final int width;
+  final int height;
 
-  const _AbsoluteParticleSize({
+  const _AbsoluteDpParticleSize({
     required this.width,
     required this.height,
   })  : assert(width > 0, 'width must be greater than 0'),
@@ -116,9 +116,6 @@ class _AbsoluteParticleSize extends SnappableParticleSize {
     final relativeWidth = width / snapshotInfo.width;
     final relativeHeight = height / snapshotInfo.height;
 
-    final roundedWidth = 1 / (1 ~/ relativeWidth);
-    final roundedHeight = 1 / (1 ~/ relativeHeight);
-
-    return (roundedWidth, roundedHeight);
+    return (relativeWidth, relativeHeight);
   }
 }

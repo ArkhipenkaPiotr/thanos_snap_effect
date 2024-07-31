@@ -35,6 +35,12 @@ class _AnimationControllerExampleScreenState extends State<AnimationControllerEx
           Snappable(
             animation: _animationController,
             outerPadding: const EdgeInsets.all(40),
+            style: const SnappableStyle(
+              particleSize: SnappableParticleSize.absoluteDp(
+                width: 8,
+                height: 8,
+              ),
+            ),
             child: const RandomImage(),
           ),
           const Spacer(),
