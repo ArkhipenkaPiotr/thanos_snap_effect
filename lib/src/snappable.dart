@@ -5,7 +5,7 @@ import 'package:thanos_snap_effect/src/shader_x/thanos_effect_shader.dart';
 import 'package:thanos_snap_effect/src/snappable_style.dart';
 import 'package:thanos_snap_effect/src/snapshot_builder.dart';
 
-class Snappable extends StatelessWidget {
+class Snappable extends StatefulWidget {
   final Widget child;
   final Animation<double> animation;
   final EdgeInsets outerPadding;
@@ -20,57 +20,77 @@ class Snappable extends StatelessWidget {
   });
 
   @override
+  State<Snappable> createState() => _SnappableState();
+}
+
+class _SnappableState extends State<Snappable> {
+  final _overlayController = OverlayPortalController();
+
+  @override
   Widget build(BuildContext context) {
     return ShaderBuilder(
       shaderAsset: ThanosSnapEffectShader.path,
       builder: (context, shader, child) {
         return SnapshotBuilder(
-          animation: animation,
+          animation: widget.animation,
           onSnapshotReadyListener: (snapshotInfo) {
             shader?.updateSnapshot(snapshotInfo);
             shader?.updateStyleProperties(
               ThanosSnapEffectStyleProps.fromSnappableStyle(
-                style,
+                widget.style,
                 snapshotInfo,
               ),
             );
+            _overlayController.show();
           },
           builder: (context, snapshotInfo, child) {
-            return Stack(
-              children: [
-                if (animation.value != 0 && snapshotInfo != null)
-                  AnimatedBuilder(
-                    animation: animation,
-                    builder: (context, snapshot) {
-                      shader?.setAnimationValue(animation.value);
-                      if (shader == null) {
-                        return const SizedBox.shrink();
-                      }
-                      return SizedBox(
-                        width: snapshotInfo.width,
-                        height: snapshotInfo.height,
-                        child: ShaderPainter(
+            return OverlayPortal(
+              controller: _overlayController,
+              overlayChildBuilder: (context) {
+                if (snapshotInfo == null || shader == null) {
+                  return const SizedBox.shrink();
+                }
+                return Positioned(
+                  left: snapshotInfo.position.dx,
+                  top: snapshotInfo.position.dy,
+                  width: snapshotInfo.width,
+                  height: snapshotInfo.height,
+                  child: SizedBox(
+                    width: snapshotInfo.width,
+                    height: snapshotInfo.height,
+                    child: AnimatedBuilder(
+                      animation: widget.animation,
+                      builder: (context, snapshot) {
+                        shader.setAnimationValue(widget.animation.value);
+                        return ShaderPainter(
                           shader: shader.fragmentShader,
-                          outerPadding: outerPadding,
-                          animationValue: animation.value,
-                        ),
-                      );
-                    },
-                  )
-                else
-                  const SizedBox.shrink(),
-                Visibility(
-                  maintainState: true,
-                  visible: animation.value == 0 || snapshotInfo == null,
-                  child: child,
-                ),
-              ],
+                          outerPadding: widget.outerPadding,
+                          animationValue: widget.animation.value,
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+              child: Visibility(
+                maintainState: true,
+                maintainSize: true,
+                maintainAnimation: true,
+                visible: widget.animation.value == 0 || snapshotInfo == null,
+                child: child,
+              ),
             );
           },
           child: child,
         );
       },
-      child: child,
+      child: widget.child,
     );
+  }
+
+  @override
+  void dispose() {
+    // _overlayController.hide();
+    super.dispose();
   }
 }

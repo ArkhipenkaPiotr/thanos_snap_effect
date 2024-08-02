@@ -79,4 +79,10 @@ class _AnimationControllerExampleScreenState extends State<AnimationControllerEx
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 }

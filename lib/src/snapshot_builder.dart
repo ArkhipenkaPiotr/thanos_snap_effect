@@ -98,7 +98,7 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
     final completer = Completer<SnapshotInfo?>();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       RenderRepaintBoundary? boundary =
-      _containerKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+          _containerKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
 
       if (boundary == null) {
         completer.complete(null);
@@ -108,8 +108,16 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
       final width = boundary.size.width;
       final height = boundary.size.height;
       final image = await boundary.toImage();
+      final position = boundary.localToGlobal(Offset.zero);
 
-      completer.complete(SnapshotInfo(image, width, height));
+      completer.complete(
+        SnapshotInfo(
+          image,
+          width,
+          height,
+          position,
+        ),
+      );
     });
     return completer.future;
   }
@@ -119,6 +127,12 @@ class SnapshotInfo {
   final ui.Image image;
   final double width;
   final double height;
+  final Offset position;
 
-  SnapshotInfo(this.image, this.width, this.height);
+  SnapshotInfo(
+    this.image,
+    this.width,
+    this.height,
+    this.position,
+  );
 }
