@@ -31,7 +31,7 @@ class _AnimatedListExampleScreenState extends State<AnimatedListExampleScreen> {
               final removed = _items.removeAt(index);
               _animatedListKey.currentState?.removeItem(
                 index,
-                duration: const Duration(milliseconds: 1500),
+                duration: const Duration(milliseconds: 1000),
                 (context, animation) {
                   return SizeTransition(
                     sizeFactor: animation,
@@ -41,6 +41,12 @@ class _AnimatedListExampleScreenState extends State<AnimatedListExampleScreen> {
                         transformer: (value) => 1 - value,
                       ),
                       outerPadding: const EdgeInsets.all(40),
+                      style: const SnappableStyle(
+                        particleSize: SnappableParticleSize.absoluteDp(
+                          width: 4,
+                          height: 4,
+                        ),
+                      ),
                       child: _AnimatedListItem(
                         index: removed,
                         onDeleteClicked: () {},
@@ -69,15 +75,66 @@ class _AnimatedListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final itemColor = Color(index * 0xFF123456).withOpacity(1.0);
+    final textColor = itemColor.computeLuminance() > 0.2 ? Colors.black : Colors.white;
+
     return Container(
-      color: Color((index * 0xFF345678).toInt()),
-      child: ListTile(
-        title: Text('Item $index'),
-        leading: Image.network('https://picsum.photos/id/$index/70/70'),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: onDeleteClicked,
-        ),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: itemColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Image.network(
+            'https://picsum.photos/id/$index/70/70',
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              return const CircularProgressIndicator();
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(
+                Icons.error,
+                size: 70,
+              );
+            },
+          ),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Item $index',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: textColor,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Description of item $index',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: textColor,
+                    ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            color: Colors.grey[700],
+            onPressed: onDeleteClicked,
+          ),
+        ],
       ),
     );
   }
