@@ -12,8 +12,8 @@
 uniform float animationValue;
 uniform float particleLifetime;
 uniform float fadeOutDuration;
-uniform float particleWidth;
-uniform float particleHeight;
+uniform float particlesInRow;
+uniform float particlesInColumn;
 uniform float particleSpeed;
 uniform vec2 uSize;
 uniform sampler2D uImageTexture;
@@ -27,7 +27,7 @@ float delayFromParticleCenterPos(float x)
 
 float delayFromColumnIndex(int i)
 {
-    return (1. - particleLifetime) * (i / (1 / particleWidth));
+    return (1. - particleLifetime) * (i / (particlesInRow));
 }
 
 float randomAngle(int i)
@@ -36,14 +36,16 @@ float randomAngle(int i)
     return min_movement_angle + floor(randomValue * movement_angles_count) * movement_angle_step;
 }
 
-int calculateInitialParticleIndex(vec2 point, float angle, float animationValue)
+int calculateInitialParticleIndex(vec2 point, float angle, float animationValue, float particleWidth, float particleHeight)
 {
     //  x0 value is calculated from the following equation:
 
+    //  Given:
     //  x = x0 + t * cos(angle) * particle_speed
     //  t = animationValue - delay
     //  delay = (1 - particle_lifetime) * x0
 
+    //  Getting the x0 from the equation:
     //  t = animationValue - (1 - particle_lifetime) * x0
     //  x = x0 + (animationValue - (1 - particle_lifetime) * x0) * cos(angle) * particle_speed
     //  x = x0 + animationValue * cos(angle) * particle_speed - (1 - particle_lifetime) * x0 * cos(angle) * particle_speed
@@ -75,16 +77,18 @@ void main()
 {
     vec2 uv=FlutterFragCoord().xy / uSize.xy;
 
+    float particleWidth = 1.0 / particlesInRow;
+    float particleHeight = 1.0 / particlesInColumn;
+
     float particlesCount = (1 / particleWidth) * (1 / particleHeight);
     for (float searchMovementAngle = min_movement_angle; searchMovementAngle <= max_movement_angle; searchMovementAngle += movement_angle_step)
     {
-        int i = calculateInitialParticleIndex(uv, searchMovementAngle, animationValue);
+        int i = calculateInitialParticleIndex(uv, searchMovementAngle, animationValue, particleWidth, particleHeight);
         if (i < 0 || i >= particlesCount)
         {
             continue;
         }
         float angle = randomAngle(i);
-//        vec2 particleCenterPos = vec2(mod(float(i), 1 / particle_width), int(float(i) / (1 / particle_width))) * particle_width + particle_width / 2;
         vec2 particleCenterPos = vec2(mod(float(i), 1 / particleWidth) * particleWidth + particleWidth / 2, int(float(i) / (1 / particleWidth)) * particleHeight + particleHeight / 2);
         float delay = delayFromParticleCenterPos(particleCenterPos.x);
         float adjustedTime = max(0.0, animationValue - delay);

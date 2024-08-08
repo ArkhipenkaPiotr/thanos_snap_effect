@@ -30,8 +30,8 @@ class ThanosSnapEffectShader implements ShaderX<ThanosSnapEffectStyleProps> {
   void updateStyleProperties(ThanosSnapEffectStyleProps styleProps) {
     _fragmentShader.setFloat(1, styleProps.particleLifetime);
     _fragmentShader.setFloat(2, styleProps.fadeOutDuration);
-    _fragmentShader.setFloat(3, styleProps.particleWidth);
-    _fragmentShader.setFloat(4, styleProps.particleHeight);
+    _fragmentShader.setFloat(3, styleProps.particlesInRow.toDouble());
+    _fragmentShader.setFloat(4, styleProps.particlesInColumn.toDouble());
     _fragmentShader.setFloat(5, styleProps.particleSpeed);
   }
 }
@@ -39,26 +39,26 @@ class ThanosSnapEffectShader implements ShaderX<ThanosSnapEffectStyleProps> {
 class ThanosSnapEffectStyleProps {
   final double particleLifetime;
   final double fadeOutDuration;
-  final double particleWidth;
-  final double particleHeight;
+  final int particlesInRow;
+  final int particlesInColumn;
   final double particleSpeed;
 
   ThanosSnapEffectStyleProps({
     required this.particleLifetime,
     required this.fadeOutDuration,
-    required this.particleWidth,
-    required this.particleHeight,
+    required this.particlesInRow,
+    required this.particlesInColumn,
     required this.particleSpeed,
   });
 
   factory ThanosSnapEffectStyleProps.fromSnappableStyle(
       SnappableStyle style, SnapshotInfo snapshotInfo) {
-    final particleSize = style.particleSize.getSafeRelativeParticleSize(snapshotInfo);
+    final (particlesInRow, particlesInColumn) = style.particleSize.getParticlesAmount(snapshotInfo);
     return ThanosSnapEffectStyleProps(
       particleLifetime: style.particleLifetime,
       fadeOutDuration: style.fadeOutDuration,
-      particleWidth: particleSize.$1,
-      particleHeight: particleSize.$2,
+      particlesInRow: particlesInRow,
+      particlesInColumn: particlesInColumn,
       particleSpeed: style.particleSpeed,
     );
   }

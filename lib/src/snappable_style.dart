@@ -40,16 +40,19 @@ abstract class SnappableParticleSize {
     required int height,
   }) = _AbsoluteDpParticleSize;
 
-  (double width, double height) getSafeRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (int particlesInRow, int particlesInColumn) getParticlesAmount(SnapshotInfo snapshotInfo) {
     final minRelativeParticleWidth = 1 / snapshotInfo.width;
     final minRelativeParticleHeight = 1 / snapshotInfo.height;
 
-    var (width, height) = _getRelativeParticleSize(snapshotInfo);
+    final (expectedParticleWidth, expectedParticleHeight) = _getRelativeParticleSize(snapshotInfo);
 
-    width = 1 / (1 ~/ width);
-    height = 1 / (1 ~/ height);
+    final particleWidth = max(minRelativeParticleWidth, expectedParticleWidth);
+    final particleHeight = max(minRelativeParticleHeight, expectedParticleHeight);
 
-    return (max(minRelativeParticleWidth, width), max(minRelativeParticleHeight, height));
+    final particlesInRow = max(2, (1 / particleWidth).ceil());
+    final particlesInColumn = max(2, (1 / particleHeight).ceil());
+
+    return (particlesInRow, particlesInColumn);
   }
 
   (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo);

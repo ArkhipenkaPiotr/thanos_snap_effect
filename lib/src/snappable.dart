@@ -87,10 +87,4 @@ class _SnappableState extends State<Snappable> {
       child: widget.child,
     );
   }
-
-  @override
-  void dispose() {
-    // _overlayController.hide();
-    super.dispose();
-  }
 }
