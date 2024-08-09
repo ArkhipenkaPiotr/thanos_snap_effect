@@ -30,6 +30,7 @@ class _SnappableState extends State<Snappable> {
   Widget build(BuildContext context) {
     return ShaderBuilder(
       shaderAsset: ThanosSnapEffectShader.path,
+      xShaderBuilder: (shader) => ThanosSnapEffectShader(shader),
       builder: (context, shader, child) {
         return SnapshotBuilder(
           animation: widget.animation,
