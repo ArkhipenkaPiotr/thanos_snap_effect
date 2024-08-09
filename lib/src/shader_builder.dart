@@ -2,10 +2,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:thanos_snap_effect/src/shader_x/shader_x.dart';
-import 'package:thanos_snap_effect/src/shader_x/thanos_effect_shader.dart';
 
 class ShaderBuilder extends StatefulWidget {
   final Function(BuildContext context, ShaderX? shader, Widget child) builder;
+  final ShaderX Function(ui.FragmentShader shader) xShaderBuilder;
   final String shaderAsset;
   final Widget child;
 
@@ -14,6 +14,7 @@ class ShaderBuilder extends StatefulWidget {
     required this.shaderAsset,
     required this.builder,
     required this.child,
+    required this.xShaderBuilder,
   });
 
   @override
@@ -22,6 +23,8 @@ class ShaderBuilder extends StatefulWidget {
 
 class _ShaderBuilderState extends State<ShaderBuilder> {
   ShaderX? _shader;
+
+  static final _shaderCache = <String, ui.FragmentProgram>{};
 
   @override
   void initState() {
@@ -35,9 +38,11 @@ class _ShaderBuilderState extends State<ShaderBuilder> {
   }
 
   void _initShader() async {
-    final program = await ui.FragmentProgram.fromAsset(widget.shaderAsset);
+    final ui.FragmentProgram program =
+        _shaderCache[widget.shaderAsset] ?? await ui.FragmentProgram.fromAsset(widget.shaderAsset);
+
     final shader = program.fragmentShader();
-    _shader = ThanosSnapEffectShader(shader);
+    _shader = widget.xShaderBuilder(shader);
     setState(() {});
   }
 }
