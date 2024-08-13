@@ -30,7 +30,7 @@ Snappable(
 );
 ```
 
-Check the (example)[example/lib] for more complex examples.
+Check the [example](example/lib) for more complex examples.
 
 ## Customization
 
