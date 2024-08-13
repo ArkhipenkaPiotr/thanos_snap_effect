@@ -30,6 +30,8 @@ Snappable(
 );
 ```
 
+Check the (example)[example/lib] for more complex examples.
+
 ## Customization
 
 You can customize the effect by passing the "outerPadding" or "style" properties to the Snappable widget.
