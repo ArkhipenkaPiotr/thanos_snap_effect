@@ -1,7 +1,7 @@
 High-performance, high-customizable, and easy-to-use "Thanos Snap" effect for Flutter.
 
 <p>
-  <img alt="Simple controller example" src="https://github.com/ArkhipenkaPiotr/thanos_snap_effect/blob/master/doc/animated_list_example.gif" width="160"/>
+  <img alt="Simple controller example" src="https://github.com/ArkhipenkaPiotr/thanos_snap_effect/blob/master/doc/simple_controller_example.gif" width="160"/>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <img alt="Animated list example" src="https://github.com/ArkhipenkaPiotr/thanos_snap_effect/blob/master/doc/animated_list_example.gif" width="160"/>
 </p>
