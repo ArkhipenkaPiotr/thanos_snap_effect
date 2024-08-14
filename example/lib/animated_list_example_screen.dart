@@ -68,7 +68,6 @@ class _AnimatedListItem extends StatelessWidget {
   final VoidCallback onDeleteClicked;
 
   const _AnimatedListItem({
-    super.key,
     required this.index,
     required this.onDeleteClicked,
   });
