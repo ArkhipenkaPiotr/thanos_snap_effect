@@ -1,3 +1,3 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial development release. Some things in API can be slightly changed, but the main functionality is going to be the same 
