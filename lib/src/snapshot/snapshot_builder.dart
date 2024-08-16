@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:thanos_snap_effect/src/snapshot/snapshot_info.dart';
 
 typedef SnapshotReadyBuilder = Widget Function(
     BuildContext context, SnapshotInfo? snapshotInfo, Widget child);
@@ -121,18 +121,4 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
     });
     return completer.future;
   }
-}
-
-class SnapshotInfo {
-  final ui.Image image;
-  final double width;
-  final double height;
-  final Offset position;
-
-  SnapshotInfo(
-    this.image,
-    this.width,
-    this.height,
-    this.position,
-  );
 }

@@ -2,22 +2,29 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+/// Helper widget to paint a shader
+/// This widget utilizes the CustomPaint widget to paint the shader
 class ShaderPainter extends StatelessWidget {
-  final FragmentShader shader;
-  final EdgeInsets outerPadding;
-  final double animationValue;
 
+  /// The fragment shader to paint
+  final FragmentShader shader;
+
+  /// The outer padding of the child widget.
+  /// This padding means the padding around the child widget,
+  /// which space will be used to paint the shader
+  final EdgeInsets outerPadding;
+
+  /// Creates a ShaderPainter widget
   const ShaderPainter({
     super.key,
     required this.shader,
     required this.outerPadding,
-    required this.animationValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _ShaderPainter(shader, outerPadding, animationValue),
+      painter: _ShaderPainter(shader, outerPadding),
     );
   }
 }
@@ -25,9 +32,8 @@ class ShaderPainter extends StatelessWidget {
 class _ShaderPainter extends CustomPainter {
   final FragmentShader shader;
   final EdgeInsets outerPadding;
-  final double animationValue;
 
-  _ShaderPainter(this.shader, this.outerPadding, this.animationValue);
+  _ShaderPainter(this.shader, this.outerPadding);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -46,6 +52,5 @@ class _ShaderPainter extends CustomPainter {
   @override
   bool shouldRepaint(_ShaderPainter oldDelegate) =>
       shader != oldDelegate.shader ||
-      animationValue != oldDelegate.animationValue ||
       outerPadding != oldDelegate.outerPadding;
 }

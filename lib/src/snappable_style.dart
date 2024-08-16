@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:thanos_snap_effect/src/snapshot_builder.dart';
+import 'package:thanos_snap_effect/src/snapshot/snapshot_info.dart';
 
 class SnappableStyle {
   final double particleLifetime;
