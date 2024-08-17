@@ -92,6 +92,7 @@ class _SnappableState extends State<Snappable> {
                         return ShaderPainter(
                           shader: shader.fragmentShader,
                           outerPadding: widget.outerPadding,
+                          animationValue: widget.animation.value,
                         );
                       },
                     ),
