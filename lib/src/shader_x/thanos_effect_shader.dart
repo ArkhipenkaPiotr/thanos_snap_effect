@@ -7,7 +7,8 @@ import 'package:thanos_snap_effect/src/snapshot/snapshot_info.dart';
 /// Shader for the Thanos snap effect
 class ThanosSnapEffectShader implements ShaderX<ThanosSnapEffectStyleProps> {
   /// The path to the fragment shader code
-  static const path = 'packages/thanos_snap_effect/shader/thanos_snap_effect.glsl';
+  static const path =
+      'packages/thanos_snap_effect/shader/thanos_snap_effect.glsl';
 
   final FragmentShader _fragmentShader;
 
@@ -71,7 +72,8 @@ class ThanosSnapEffectStyleProps {
   /// Creates the style properties for the Thanos snap effect from the [style] and [snapshotInfo]
   factory ThanosSnapEffectStyleProps.fromSnappableStyle(
       SnappableStyle style, SnapshotInfo snapshotInfo) {
-    final (particlesInRow, particlesInColumn) = style.particleSize.getParticlesAmount(snapshotInfo);
+    final (particlesInRow, particlesInColumn) =
+        style.particleSize.getParticlesAmount(snapshotInfo);
     return ThanosSnapEffectStyleProps(
       particleLifetime: style.particleLifetime,
       fadeOutDuration: style.fadeOutDuration,

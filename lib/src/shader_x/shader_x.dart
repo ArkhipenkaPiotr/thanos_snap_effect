@@ -4,7 +4,6 @@ import 'package:thanos_snap_effect/src/snapshot/snapshot_info.dart';
 
 /// High-level representation of the shader
 abstract interface class ShaderX<StyleProps> {
-
   /// The fragment shader that will be used to render the effect
   FragmentShader get fragmentShader;
 

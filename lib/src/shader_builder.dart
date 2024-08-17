@@ -8,7 +8,6 @@ import 'package:thanos_snap_effect/src/shader_x/shader_x.dart';
 /// The shader is built from the asset file, which contains the fragment shader code.
 /// The shader is built only once and then provided to the child widget.
 class ShaderBuilder extends StatefulWidget {
-
   /// The builder function, which is called every time the build method is called
   /// Initially, the shader is null. When the shader is built, the builder function
   /// is called with the shader as the second argument
@@ -55,8 +54,8 @@ class _ShaderBuilderState extends State<ShaderBuilder> {
   }
 
   void _initShader() async {
-    final ui.FragmentProgram program =
-        _shaderCache[widget.shaderAsset] ?? await ui.FragmentProgram.fromAsset(widget.shaderAsset);
+    final ui.FragmentProgram program = _shaderCache[widget.shaderAsset] ??
+        await ui.FragmentProgram.fromAsset(widget.shaderAsset);
 
     final shader = program.fragmentShader();
     _shader = widget.xShaderBuilder(shader);

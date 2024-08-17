@@ -19,7 +19,6 @@ typedef SnapshotReadyListener = void Function(SnapshotInfo snapshotInfo);
 /// The snapshot is taken when the animation value becomes not zero.
 /// After that, the snapshot is passed to the [builder] function and to [onSnapshotReadyListener]
 class SnapshotBuilder extends StatefulWidget {
-
   /// The animation controller, which drives the animation
   /// [SnapshotBuilder] listens to the animation changes and takes the snapshot when the animation value becomes not zero
   final Animation<double> animation;
@@ -117,8 +116,8 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
   Future<SnapshotInfo?> _capture() async {
     final completer = Completer<SnapshotInfo?>();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      RenderRepaintBoundary? boundary =
-          _containerKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      RenderRepaintBoundary? boundary = _containerKey.currentContext
+          ?.findRenderObject() as RenderRepaintBoundary?;
 
       if (boundary == null) {
         completer.complete(null);

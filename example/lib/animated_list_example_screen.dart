@@ -7,7 +7,8 @@ class AnimatedListExampleScreen extends StatefulWidget {
   const AnimatedListExampleScreen({super.key});
 
   @override
-  State<AnimatedListExampleScreen> createState() => _AnimatedListExampleScreenState();
+  State<AnimatedListExampleScreen> createState() =>
+      _AnimatedListExampleScreenState();
 }
 
 class _AnimatedListExampleScreenState extends State<AnimatedListExampleScreen> {
@@ -75,7 +76,8 @@ class _AnimatedListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemColor = Color(index * 0xFF123456).withOpacity(1.0);
-    final textColor = itemColor.computeLuminance() > 0.2 ? Colors.black : Colors.white;
+    final textColor =
+        itemColor.computeLuminance() > 0.2 ? Colors.black : Colors.white;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),

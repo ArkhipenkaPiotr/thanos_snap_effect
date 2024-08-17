@@ -10,7 +10,6 @@ import 'package:thanos_snap_effect/src/snapshot/snapshot_builder.dart';
 /// The translation is expressed by double value from 0.0 to 1.0 value,
 /// where 0.0 is the default state and 1.0 is the completely disappeared widget
 class Snappable extends StatefulWidget {
-
   /// The child widget, which should disappear
   ///
   /// When the animation starts (animation value become not zero),

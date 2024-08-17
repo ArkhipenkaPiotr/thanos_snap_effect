@@ -18,13 +18,15 @@ class MenuScreen extends StatelessWidget {
             ListTile(
               title: const Text('Animation Controller Example'),
               onTap: () {
-                Navigator.of(context).pushNamed(AnimationControllerExampleScreen.routeName);
+                Navigator.of(context)
+                    .pushNamed(AnimationControllerExampleScreen.routeName);
               },
             ),
             ListTile(
               title: const Text('Animated List Example'),
               onTap: () {
-                Navigator.of(context).pushNamed(AnimatedListExampleScreen.routeName);
+                Navigator.of(context)
+                    .pushNamed(AnimatedListExampleScreen.routeName);
               },
             ),
           ],

@@ -8,10 +8,12 @@ class AnimationControllerExampleScreen extends StatefulWidget {
   const AnimationControllerExampleScreen({super.key});
 
   @override
-  State<AnimationControllerExampleScreen> createState() => _AnimationControllerExampleScreenState();
+  State<AnimationControllerExampleScreen> createState() =>
+      _AnimationControllerExampleScreenState();
 }
 
-class _AnimationControllerExampleScreenState extends State<AnimationControllerExampleScreen>
+class _AnimationControllerExampleScreenState
+    extends State<AnimationControllerExampleScreen>
     with SingleTickerProviderStateMixin {
   late final _animationController = AnimationController(
     vsync: this,
@@ -47,7 +49,8 @@ class _AnimationControllerExampleScreenState extends State<AnimationControllerEx
           Snappable(
             animation: _animationController,
             style: const SnappableStyle(
-              particleSize: SnappableParticleSize.squareFromRelativeHeight(0.03),
+              particleSize:
+                  SnappableParticleSize.squareFromRelativeHeight(0.03),
             ),
             child: const FlutterLogo(
               size: 200,

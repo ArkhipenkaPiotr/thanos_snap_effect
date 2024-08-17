@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 /// Helper widget to paint a shader
 /// This widget utilizes the CustomPaint widget to paint the shader
 class ShaderPainter extends StatelessWidget {
-
   /// The fragment shader to paint
   final FragmentShader shader;
 
@@ -51,6 +50,5 @@ class _ShaderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ShaderPainter oldDelegate) =>
-      shader != oldDelegate.shader ||
-      outerPadding != oldDelegate.outerPadding;
+      shader != oldDelegate.shader || outerPadding != oldDelegate.outerPadding;
 }
