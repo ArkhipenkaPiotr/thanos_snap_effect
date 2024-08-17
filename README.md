@@ -23,6 +23,8 @@ The principle of using this widget is similar to "Transition" widgets, like "Fad
 
 Just wrap your widget with the Snappable widget and pass the AnimationController (or any Animation<double> descendant) object to the "animation" property.
 Then just start the animation and see the magic!
+
+
 ```dart
 Snappable(
   animation: animationController, // AnimationController object, or any other animation object with double tween from 0.0 to 1.0
@@ -35,6 +37,7 @@ Check the [example](example/lib) for more complex examples.
 ## Customization
 
 You can customize the effect by passing the "outerPadding" or "style" properties to the Snappable widget.
+
 
 ```dart
 Snappable(
