@@ -1,6 +1,6 @@
 name: thanos_snap_effect
 description: 'High-performance, high-customizable, and easy-to-use "Thanos Snap" effect for Flutter.'
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/ArkhipenkaPiotr/thanos_snap_effect
 
 environment:
