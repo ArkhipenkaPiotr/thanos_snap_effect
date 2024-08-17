@@ -5,16 +5,36 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:thanos_snap_effect/src/snapshot/snapshot_info.dart';
 
+/// The function to build the widget when the snapshot is ready
+///
+/// In case of the [snapshotInfo] is null, the snapshot is not ready yet
 typedef SnapshotReadyBuilder = Widget Function(
     BuildContext context, SnapshotInfo? snapshotInfo, Widget child);
+
+/// The function to be called when the snapshot is ready
 typedef SnapshotReadyListener = void Function(SnapshotInfo snapshotInfo);
 
+/// Helper widget to build a snapshot of the child widget
+///
+/// The snapshot is taken when the animation value becomes not zero.
+/// After that, the snapshot is passed to the [builder] function and to [onSnapshotReadyListener]
 class SnapshotBuilder extends StatefulWidget {
+
+  /// The animation controller, which drives the animation
+  /// [SnapshotBuilder] listens to the animation changes and takes the snapshot when the animation value becomes not zero
   final Animation<double> animation;
+
+  /// The function to build the widget when the snapshot is ready
+  /// In case the snapshot is not ready yet, this function is called otherwise with null [snapshotInfo]
   final SnapshotReadyBuilder builder;
+
+  /// The function to be called when the snapshot is ready
   final SnapshotReadyListener onSnapshotReadyListener;
+
+  /// The child widget, which snapshot should be taken
   final Widget child;
 
+  /// Creates a SnapshotBuilder widget
   const SnapshotBuilder({
     super.key,
     required this.animation,
