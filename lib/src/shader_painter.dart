@@ -13,9 +13,6 @@ class ShaderPainter extends StatelessWidget {
   /// which space will be used to paint the shader
   final EdgeInsets outerPadding;
 
-  /// The current animation value of the effect
-  /// This value is not used implicitly
-  /// It is passed to repaint the widget when the animation value changes
   final double animationValue;
 
   /// Creates a ShaderPainter widget
