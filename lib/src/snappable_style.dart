@@ -73,6 +73,7 @@ abstract class SnappableParticleSize {
   const factory SnappableParticleSize.squareFromRelativeHeight(double height) =
       _SquareFromRelativeHeight;
 
+  /// Creates the particle size in absolute values
   const factory SnappableParticleSize.absoluteDp({
     required int width,
     required int height,
