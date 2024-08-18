@@ -32,7 +32,8 @@ class SnappableStyle {
     this.particleLifetime = 0.6,
     this.fadeOutDuration = 0.3,
     this.particleSpeed = 1.0,
-    this.particleSize = const SnappableParticleSize.squareFromRelativeWidth(0.01),
+    this.particleSize =
+        const SnappableParticleSize.squareFromRelativeWidth(0.01),
   })  : assert(particleLifetime > 0 && particleLifetime <= 1,
             'particleLifetime must be in the range [0, 1]'),
         assert(fadeOutDuration > 0 && fadeOutDuration <= 1,
@@ -82,14 +83,17 @@ abstract class SnappableParticleSize {
   ///
   /// The minimum width and height of the particles is 1 dp
   /// In case the calculated width or height is less than 1 dp, the width or height will be set to 1 dp
-  (int particlesInRow, int particlesInColumn) getParticlesAmount(SnapshotInfo snapshotInfo) {
+  (int particlesInRow, int particlesInColumn) getParticlesAmount(
+      SnapshotInfo snapshotInfo) {
     final minRelativeParticleWidth = 1 / snapshotInfo.width;
     final minRelativeParticleHeight = 1 / snapshotInfo.height;
 
-    final (expectedParticleWidth, expectedParticleHeight) = _getRelativeParticleSize(snapshotInfo);
+    final (expectedParticleWidth, expectedParticleHeight) =
+        _getRelativeParticleSize(snapshotInfo);
 
     final particleWidth = max(minRelativeParticleWidth, expectedParticleWidth);
-    final particleHeight = max(minRelativeParticleHeight, expectedParticleHeight);
+    final particleHeight =
+        max(minRelativeParticleHeight, expectedParticleHeight);
 
     final particlesInRow = max(2, (1 / particleWidth).ceil());
     final particlesInColumn = max(2, (1 / particleHeight).ceil());
@@ -97,7 +101,8 @@ abstract class SnappableParticleSize {
     return (particlesInRow, particlesInColumn);
   }
 
-  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo);
+  (double width, double height) _getRelativeParticleSize(
+      SnapshotInfo snapshotInfo);
 }
 
 class _RelativeParticleSize extends SnappableParticleSize {
@@ -107,11 +112,14 @@ class _RelativeParticleSize extends SnappableParticleSize {
   const _RelativeParticleSize({
     required this.width,
     required this.height,
-  })  : assert(width >= 0 && width <= 0.5, 'width must be in the range [0, 0.5]'),
-        assert(height >= 0 && height <= 0.5, 'height must be in the range [0, 0.5]');
+  })  : assert(
+            width >= 0 && width <= 0.5, 'width must be in the range [0, 0.5]'),
+        assert(height >= 0 && height <= 0.5,
+            'height must be in the range [0, 0.5]');
 
   @override
-  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (double width, double height) _getRelativeParticleSize(
+      SnapshotInfo snapshotInfo) {
     return (width, height);
   }
 }
@@ -120,10 +128,12 @@ class _SquareFromRelativeWidth extends SnappableParticleSize {
   final double width;
 
   const _SquareFromRelativeWidth(this.width)
-      : assert(width >= 0 && width <= 0.5, 'width must be in the range [0, 0.5]');
+      : assert(
+            width >= 0 && width <= 0.5, 'width must be in the range [0, 0.5]');
 
   @override
-  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (double width, double height) _getRelativeParticleSize(
+      SnapshotInfo snapshotInfo) {
     final absoluteWidth = snapshotInfo.width * width;
     final relativeHeight = absoluteWidth / snapshotInfo.height;
 
@@ -135,10 +145,12 @@ class _SquareFromRelativeHeight extends SnappableParticleSize {
   final double height;
 
   const _SquareFromRelativeHeight(this.height)
-      : assert(height >= 0 && height <= 0.5, 'height must be in the range [0, 0.5]');
+      : assert(height >= 0 && height <= 0.5,
+            'height must be in the range [0, 0.5]');
 
   @override
-  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (double width, double height) _getRelativeParticleSize(
+      SnapshotInfo snapshotInfo) {
     final absoluteHeight = snapshotInfo.height * height;
     final relativeWidth = absoluteHeight / snapshotInfo.width;
 
@@ -157,7 +169,8 @@ class _AbsoluteDpParticleSize extends SnappableParticleSize {
         assert(height > 0, 'height must be greater than 0');
 
   @override
-  (double width, double height) _getRelativeParticleSize(SnapshotInfo snapshotInfo) {
+  (double width, double height) _getRelativeParticleSize(
+      SnapshotInfo snapshotInfo) {
     final relativeWidth = width / snapshotInfo.width;
     final relativeHeight = height / snapshotInfo.height;
 
