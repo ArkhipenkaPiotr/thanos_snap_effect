@@ -54,7 +54,8 @@ abstract class SnappableParticleSize {
   ///
   /// The width and height must be in the range [0, 0.5] to have at least 2 particles in the row/column
   const factory SnappableParticleSize.relative({
-    required double width, required double height,
+    required double width,
+    required double height,
   }) = _RelativeParticleSize;
 
   /// Creates the square particle size from the relative width.
@@ -71,7 +72,6 @@ abstract class SnappableParticleSize {
   const factory SnappableParticleSize.squareFromRelativeHeight(double height) =
       _SquareFromRelativeHeight;
 
-  /// Creates the particle size in absolute values
   const factory SnappableParticleSize.absoluteDp({
     required int width,
     required int height,
