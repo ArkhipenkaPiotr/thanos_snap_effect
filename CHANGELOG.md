@@ -6,3 +6,7 @@
 ## 0.0.2
 
 * Fixed documentation
+
+## 0.0.6
+
+* Improved documentation, did a little refactoring
