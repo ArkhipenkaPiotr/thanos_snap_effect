@@ -1,0 +1,30 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1.2
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Validate publishing
+        run: dart pub publish --dry-run
+
+#      - name: Publish package
+#        run: dart pub publish -f
+#        env:
+#          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
