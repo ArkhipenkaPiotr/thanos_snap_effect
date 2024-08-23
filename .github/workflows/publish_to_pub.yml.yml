@@ -3,10 +3,12 @@ name: Publish to pub.dev
 on:
   push:
     tags:
-      - '*.*.*'
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   publish:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +30,5 @@ jobs:
       - name: Validate publishing
         run: dart pub publish --dry-run
 
-#      - name: Publish package
-#        run: dart pub publish -f
-#        env:
-#          PUB_TOKEN: ${{ secrets.PUB_TOKEN }}
+      - name: Publish package
+        run: dart pub publish -f
