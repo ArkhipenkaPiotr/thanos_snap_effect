@@ -40,8 +40,6 @@ class ShaderBuilder extends StatefulWidget {
 class _ShaderBuilderState extends State<ShaderBuilder> {
   ShaderX? _shader;
 
-  static final _shaderCache = <String, ui.FragmentProgram>{};
-
   @override
   void initState() {
     super.initState();
@@ -54,8 +52,7 @@ class _ShaderBuilderState extends State<ShaderBuilder> {
   }
 
   void _initShader() async {
-    final ui.FragmentProgram program = _shaderCache[widget.shaderAsset] ??
-        await ui.FragmentProgram.fromAsset(widget.shaderAsset);
+    final ui.FragmentProgram program = await ui.FragmentProgram.fromAsset(widget.shaderAsset);
 
     final shader = program.fragmentShader();
     _shader = widget.xShaderBuilder(shader);
