@@ -1,5 +1,6 @@
 import 'package:example/animated_list_example_screen.dart';
 import 'package:example/animation_controller_example_screen.dart';
+import 'package:example/golden_testing_example.dart';
 import 'package:example/menu_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,8 @@ class MyApp extends StatelessWidget {
             const AnimationControllerExampleScreen(),
         AnimatedListExampleScreen.routeName: (context) =>
             const AnimatedListExampleScreen(),
+        GolderTestingExampleScreen.routeName: (context) =>
+            const GolderTestingExampleScreen(),
       },
     );
   }

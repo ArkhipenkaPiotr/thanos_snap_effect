@@ -1,5 +1,6 @@
 import 'package:example/animated_list_example_screen.dart';
 import 'package:example/animation_controller_example_screen.dart';
+import 'package:example/golden_testing_example.dart';
 import 'package:flutter/material.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -27,6 +28,13 @@ class MenuScreen extends StatelessWidget {
               onTap: () {
                 Navigator.of(context)
                     .pushNamed(AnimatedListExampleScreen.routeName);
+              },
+            ),
+            ListTile(
+              title: const Text('Golden Testing Example'),
+              onTap: () {
+                Navigator.of(context)
+                    .pushNamed(GolderTestingExampleScreen.routeName);
               },
             ),
           ],
