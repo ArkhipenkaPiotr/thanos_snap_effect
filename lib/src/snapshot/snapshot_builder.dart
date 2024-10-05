@@ -119,7 +119,7 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
       RenderRepaintBoundary? boundary = _containerKey.currentContext
           ?.findRenderObject() as RenderRepaintBoundary?;
 
-      if (boundary == null) {
+      if (boundary == null || boundary.debugNeedsPaint) {
         completer.complete(null);
         return;
       }
