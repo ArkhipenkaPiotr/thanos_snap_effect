@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -119,7 +120,7 @@ class _SnapshotBuilderState extends State<SnapshotBuilder> {
       RenderRepaintBoundary? boundary = _containerKey.currentContext
           ?.findRenderObject() as RenderRepaintBoundary?;
 
-      if (boundary == null || boundary.debugNeedsPaint) {
+      if (boundary == null || (kDebugMode && boundary.debugNeedsPaint)) {
         completer.complete(null);
         return;
       }
