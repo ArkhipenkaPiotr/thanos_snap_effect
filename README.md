@@ -1,3 +1,5 @@
+
+
 High-performance, high-customizable, and easy-to-use "Thanos Snap" effect for Flutter.
 
 <p>
@@ -7,6 +9,13 @@ High-performance, high-customizable, and easy-to-use "Thanos Snap" effect for Fl
 </p>
 
 ## Getting started
+
+Add this to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  thanos_snap_effect: ^0.0.9
+```
 
 IMPORTANT: This package uses the custom fragment shader, so you should include the shader file in your pubspec.yaml file.
 
